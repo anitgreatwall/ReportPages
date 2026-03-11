@@ -77,6 +77,43 @@ h1 .line2 {
 }
 .header-meta { margin-top: 14px; font-size: 0.75rem; color: var(--muted); letter-spacing: 0.1em; }
 
+/* ── PHASE CONTROLS ── */
+.phase-controls {
+  display: flex;
+  justify-content: flex-start;
+  max-width: 980px;
+  margin: 16px auto 20px;
+  padding: 0 20px;
+}
+.ctrl-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 18px;
+  border-radius: 7px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.04);
+  color: var(--muted);
+  transition: background 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+.ctrl-btn:hover {
+  background: rgba(255,255,255,0.09);
+  color: var(--text);
+  border-color: rgba(255,255,255,0.22);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+}
+.ctrl-btn.active {
+  background: rgba(0,229,255,0.08);
+  border-color: rgba(0,229,255,0.35);
+  color: var(--plan);
+  box-shadow: 0 0 12px rgba(0,229,255,0.08);
+}
+
 /* ── PIPELINE WRAPPER ── */
 .pipeline {
   position: relative; z-index: 10;
@@ -796,8 +833,15 @@ footer {
     <div class="line2">To Production</div>
   </h1>
   <div class="header-meta">5 PHASES &nbsp;·&nbsp; 15 STEPS</div>
+  <div class="phase-controls">
+    <button class="ctrl-btn" id="btn-toggle-all" onclick="toggleAll()">
+      <svg id="ctrl-icon" width="13" height="13" viewBox="0 0 13 13" fill="none">
+        <rect x="1" y="5.5" width="11" height="2" rx="1" fill="currentColor"/>
+      </svg>
+      <span id="ctrl-label">收起全部</span>
+    </button>
+  </div>
 
-</header>
 
 <div class="pipeline">
   <div class="spine"></div>
@@ -1767,6 +1811,30 @@ document.querySelectorAll('.phase').forEach(p => observer.observe(p));
 // ── COLLAPSE TOGGLE ──
 function togglePhase(header) {
   header.closest('.phase').classList.toggle('collapsed');
+  syncControlState();
+}
+
+function toggleAll() {
+  const phases = document.querySelectorAll('.phase');
+  const anyExpanded = [...phases].some(p => !p.classList.contains('collapsed'));
+  phases.forEach(p => p.classList.toggle('collapsed', anyExpanded));
+  syncControlState();
+}
+
+function syncControlState() {
+  const phases = document.querySelectorAll('.phase');
+  const allCollapsed = [...phases].every(p => p.classList.contains('collapsed'));
+  const icon = document.getElementById('ctrl-icon');
+  const label = document.getElementById('ctrl-label');
+  if (allCollapsed) {
+    label.textContent = '展开全部';
+    icon.innerHTML = '<rect x="1" y="5.5" width="11" height="2" rx="1" fill="currentColor"/><rect x="5.5" y="1" width="2" height="11" rx="1" fill="currentColor"/>';
+    document.getElementById('btn-toggle-all').classList.add('active');
+  } else {
+    label.textContent = '收起全部';
+    icon.innerHTML = '<rect x="1" y="5.5" width="11" height="2" rx="1" fill="currentColor"/>';
+    document.getElementById('btn-toggle-all').classList.remove('active');
+  }
 }
 
 // ── PARTICLE CANVAS ──
