@@ -726,6 +726,46 @@ footer {
   padding: 20px; color: var(--muted); font-size: 0.72rem; letter-spacing: 0.1em;
 }
 
+/* ── CUSTOM TOOLTIP ── */
+[data-tip] { cursor: default; }
+
+#tooltip {
+  position: fixed;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  transform: translateY(4px);
+}
+#tooltip.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+#tooltip-inner {
+  background: #0d1b2e;
+  color: #c8d8f0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 500;
+  line-height: 1.65;
+  padding: 9px 13px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.14);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 0 0 1px rgba(0,0,0,0.3);
+  white-space: pre;
+  max-width: 320px;
+}
+#tooltip-arrow {
+  width: 0; height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 7px solid rgba(255,255,255,0.14);
+  position: absolute;
+  bottom: -7px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
 /* ── TEST TYPE CARDS ── */
 .test-grid {
   display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
@@ -779,15 +819,21 @@ footer {
       <div class="phase-body">
 
         <div class="step">
-          <div class="step-num c-plan">1</div>
+          <div class="step-num c-plan" data-tip="Step 1：需求规划
+PO 负责将业务目标拆解为
+可开发的 User Story 并录入飞书">1</div>
           <div class="step-content">
             <div class="step-label">Product Owner 在飞书创建 User Story，分配给开发团队</div>
             <div class="chips">
-              <div class="chip chip-white">👤 Product Owner</div>
+              <div class="chip chip-white" data-tip="产品负责人：负责定义
+需求优先级和验收标准">👤 Product Owner</div>
               <span class="chip-arrow">→</span>
-              <div class="chip chip-cyan">🔵 飞书 Lark</div>
+              <div class="chip chip-cyan" data-tip="飞书 Lark：团队协作平台
+用于需求文档、任务看板
+和即时沟通">🔵 飞书 Lark</div>
               <span class="chip-arrow">→</span>
-              <div class="chip chip-cyan">👨‍💻 Developers</div>
+              <div class="chip chip-cyan" data-tip="开发团队：认领 Story
+评估工作量后开始开发">👨‍💻 Developers</div>
             </div>
           </div>
         </div>
@@ -795,13 +841,19 @@ footer {
         <hr class="step-div">
 
         <div class="step">
-          <div class="step-num c-plan">2</div>
+          <div class="step-num c-plan" data-tip="Step 2：Sprint 规划
+开发团队认领任务，拆分子任务
+并在迭代中持续与 PO 对齐">2</div>
           <div class="step-content">
             <div class="step-label">开发认领 Story，规划迭代，持续与 PO 同步进度</div>
             <div class="chips">
-              <div class="chip chip-cyan">📌 Story 认领</div>
-              <div class="chip chip-cyan">🗂 Sprint 规划</div>
-              <div class="feedback-tag">⭐ Feedback Loop</div>
+              <div class="chip chip-cyan" data-tip="Story 认领：开发从看板
+领取任务，明确负责人">📌 Story 认领</div>
+              <div class="chip chip-cyan" data-tip="Sprint 规划：将 Story 分配
+到固定时间窗口的迭代周期">🗂 Sprint 规划</div>
+              <div class="feedback-tag" data-tip="Feedback Loop：开发过程中
+若需求有歧义，随时与 PO
+反馈确认，避免返工">⭐ Feedback Loop</div>
             </div>
           </div>
         </div>
@@ -834,20 +886,30 @@ footer {
       <div class="phase-body">
 
         <div class="step">
-          <div class="step-num c-dev">3</div>
+          <div class="step-num c-dev" data-tip="Step 3：选择开发工具
+根据语言和团队习惯
+选择合适的 IDE 或编辑器">3</div>
           <div class="step-content">
             <div class="step-label">🖥️ 开发 IDE &amp; 编辑器 — 选择适合的开发环境</div>
             <div class="chips">
-              <div class="chip chip-green">
+              <div class="chip chip-green" data-tip="IntelliJ IDEA：JetBrains 出品
+Java/Kotlin 首选重量级 IDE
+智能补全、重构、调试功能强大">
                 <span class="ide-dot" style="background:#ff3d5a"></span>💡 IntelliJ IDEA
               </div>
-              <div class="chip chip-green">
+              <div class="chip chip-green" data-tip="VS Code：微软出品的轻量编辑器
+插件生态极其丰富，支持几乎
+所有语言，启动速度快">
                 <span class="ide-dot" style="background:#007acc"></span>🔷 VS Code
               </div>
-              <div class="chip chip-green">
+              <div class="chip chip-green" data-tip="Qoder：AI 原生 IDE
+深度集成大模型，支持
+代码补全与对话式编程">
                 <span class="ide-dot" style="background:#a259ff"></span>🤖 Qoder
               </div>
-              <div class="chip chip-green">
+              <div class="chip chip-green" data-tip="Claude Code：Anthropic 推出的
+终端 AI 编程助手，通过对话
+直接操作代码库">
                 <span class="ide-dot" style="background:#cc785c"></span>🟠 Claude Code
               </div>
             </div>
@@ -857,11 +919,15 @@ footer {
         <hr class="step-div">
 
         <div class="step">
-          <div class="step-num c-dev" style="background:rgba(105,255,71,0.15);color:#69ff47;border:1px solid rgba(105,255,71,0.4);font-size:0.62rem;">AI</div>
+          <div class="step-num c-dev" style="background:rgba(105,255,71,0.15);color:#69ff47;border:1px solid rgba(105,255,71,0.4);font-size:0.62rem;" data-tip="AI 辅助编码：借助大模型
+加速代码生成、自动生成
+注释文档、提供架构建议">AI</div>
           <div class="step-content">
             <div class="step-label">🧠 AI 大模型辅助编码 — 代码生成 / 架构设计 / 文档</div>
             <div class="ai-model-row">
-              <div class="ai-card ai-qwen">
+              <div class="ai-card ai-qwen" data-tip="Qwen（通义千问）：阿里云出品
+中文理解能力强，适合中文
+注释、国内业务场景代码生成">
                 <div class="ai-card-header">
                   <span class="ai-dot"></span>
                   <span class="ai-name">Qwen</span>
@@ -874,7 +940,9 @@ footer {
                   <span class="ai-tag">中文优化</span>
                 </div>
               </div>
-              <div class="ai-card ai-gpt">
+              <div class="ai-card ai-gpt" data-tip="GPT（ChatGPT）：OpenAI 出品
+英文代码能力强，适合复杂
+算法设计和技术文档撰写">
                 <div class="ai-card-header">
                   <span class="ai-dot"></span>
                   <span class="ai-name">GPT</span>
@@ -886,7 +954,9 @@ footer {
                   <span class="ai-tag">文档撰写</span>
                 </div>
               </div>
-              <div class="ai-card ai-claude">
+              <div class="ai-card ai-claude" data-tip="Claude：Anthropic 出品
+擅长长上下文代码理解
+和详细的架构分析解释">
                 <div class="ai-card-header">
                   <span class="ai-dot"></span>
                   <span class="ai-name">Claude</span>
@@ -898,7 +968,9 @@ footer {
                   <span class="ai-tag">文档撰写</span>
                 </div>
               </div>
-              <div class="ai-card ai-glm">
+              <div class="ai-card ai-glm" data-tip="GLM（智谱 AI）：国产大模型
+中文代码生成效果好
+支持私有化部署">
                 <div class="ai-card-header">
                   <span class="ai-dot"></span>
                   <span class="ai-name">GLM</span>
@@ -918,7 +990,9 @@ footer {
 
         <!-- Git Flow animated diagram -->
         <div class="step">
-          <div class="step-num c-dev">4</div>
+          <div class="step-num c-dev" data-tip="Step 4：代码提交与审查
+开发在独立分支上写代码
+通过 PR 让同事 Review 后合入主干">4</div>
           <div class="step-content">
             <div class="step-label">💾 代码提交 &amp; Code Review — Feature Branch → PR → Merge</div>
             <div class="git-flow">
@@ -951,17 +1025,24 @@ footer {
                 <div class="git-tracks">
                   <!-- main branch -->
                   <div class="git-track-row">
-                    <span class="git-label label-main">main</span>
+                    <span class="git-label label-main" data-tip="main 分支：受保护的主干
+不能直接 push，只能通过
+PR 合并，始终保持可发布状态">main</span>
                     <div class="git-track-area">
-                      <div class="git-commit main" title="稳定基线"></div>
+                      <div class="git-commit main" data-tip="稳定基线 commit
+这是开发新功能前的起点"></div>
                       <div class="git-line git-branch-line" style="flex:1"></div>
                       <!-- branch-out connector -->
-                      <div class="git-branch-out"></div>
+                      <div class="git-branch-out" data-tip="分支点：feature 从这里
+从 main 分叉出去"></div>
                       <div class="git-line git-branch-line" style="flex:2.2"></div>
                       <!-- merge-in commit -->
-                      <div class="git-commit main merge-commit" title="Merge commit — feature 已合入"></div>
+                      <div class="git-commit main merge-commit" data-tip="Merge commit：feature 分支
+经 Code Review 审核通过后
+合入 main 产生的合并节点"></div>
                       <div class="git-line git-branch-line" style="flex:0.8"></div>
-                      <div class="git-commit main" title="后续开发继续"></div>
+                      <div class="git-commit main" data-tip="后续开发继续在 main 上推进
+可再次创建新的 feature 分支"></div>
                     </div>
                   </div>
 
@@ -973,15 +1054,23 @@ footer {
 
                   <!-- feature branch -->
                   <div class="git-track-row">
-                    <span class="git-label label-feat">feature/xxx</span>
+                    <span class="git-label label-feat" data-tip="feature 分支：专门开发
+某个功能的独立分支
+命名如 feature/login">feature/xxx</span>
                     <div class="git-track-area" style="margin-left:10%">
-                      <div class="git-commit feature" title="分支起点（从 main checkout）"></div>
+                      <div class="git-commit feature" data-tip="分支起点：从 main checkout
+创建新分支，开始独立开发"></div>
                       <div class="git-line git-branch-line-feat"></div>
-                      <div class="git-commit feature" title="commit: 新增功能代码"></div>
+                      <div class="git-commit feature" data-tip="commit：提交一次功能代码
+每次 commit 要写清楚改了什么"></div>
                       <div class="git-line git-branch-line-feat"></div>
-                      <div class="git-commit feature" title="commit: 修复 review 意见"></div>
+                      <div class="git-commit feature" data-tip="commit：根据 review 意见
+修改代码后再次提交"></div>
                       <div class="git-line git-branch-line-feat" style="flex:0.5"></div>
-                      <div class="git-commit pr" title="Pull Request — 等待 Code Review"></div>
+                      <div class="git-commit pr" data-tip="Pull Request（PR）：
+正式申请将 feature 合入 main
+触发 Code Review 流程
+同事审核通过后才能合并"></div>
                     </div>
                   </div>
                 </div>
@@ -1001,13 +1090,17 @@ footer {
         <hr class="step-div">
 
         <div class="step">
-          <div class="step-num c-dev">5</div>
+          <div class="step-num c-dev" data-tip="Step 5：触发 CI
+代码合入 main 后自动触发
+Jenkins 开始构建流水线">5</div>
           <div class="step-content">
             <div class="step-label">🐙 Gitea Webhook 触发 Jenkins CI 流水线</div>
             <div class="pipeline-diagram">
               <div class="pl-label">触发链路</div>
               <div class="pl-stages">
-                <div class="pl-node pl-green">
+                <div class="pl-node pl-green" data-tip="Gitea：自托管的 Git 代码仓库
+类似 GitHub，用于存储
+和管理团队的所有代码">
                   <div class="pl-node-box">
                     🐙
                     <div class="pl-node-status status-active"></div>
@@ -1018,7 +1111,9 @@ footer {
                   <div class="pl-connector-line"></div>
                   <div class="pl-connector-arrow"></div>
                 </div>
-                <div class="pl-node pl-white" style="--c:#fff">
+                <div class="pl-node pl-white" style="--c:#fff" data-tip="Webhook：代码事件发生时
+（如 push/merge）自动向
+Jenkins 发送 HTTP 通知">
                   <div class="pl-node-box" style="background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.2);">
                     🪝
                   </div>
@@ -1028,7 +1123,9 @@ footer {
                   <div class="pl-connector-line"></div>
                   <div class="pl-connector-arrow"></div>
                 </div>
-                <div class="pl-node pl-orange">
+                <div class="pl-node pl-orange" data-tip="Jenkins：开源 CI 工具
+接收到 Webhook 后自动执行
+Jenkinsfile 定义的构建流水线">
                   <div class="pl-node-box">
                     🔨
                     <div class="pl-node-status status-run"></div>
@@ -1069,13 +1166,17 @@ footer {
 
         <!-- Animated CI pipeline -->
         <div class="step">
-          <div class="step-num c-build" style="background:rgba(255,109,0,0.15);color:#ff9d4d;border:1px solid rgba(255,109,0,0.4);font-size:0.58rem;">CI</div>
+          <div class="step-num c-build" style="background:rgba(255,109,0,0.15);color:#ff9d4d;border:1px solid rgba(255,109,0,0.4);font-size:0.58rem;" data-tip="CI（持续集成）：每次
+代码合入都自动触发构建
+和测试，快速发现问题">CI</div>
           <div class="step-content">
             <div class="step-label">CI 流水线 — 构建镜像 · 单测 · 代码扫描 · 推送 Harbor</div>
             <div class="pipeline-diagram">
               <div class="pl-label">Jenkins Pipeline</div>
               <div class="pl-stages">
-                <div class="pl-node pl-orange">
+                <div class="pl-node pl-orange" data-tip="Checkout：从 Gitea 拉取
+最新代码到 Jenkins
+工作空间，准备构建">
                   <div class="pl-node-box">
                     🧙
                     <div class="pl-node-status status-run"></div>
@@ -1086,7 +1187,9 @@ footer {
                   <div class="pl-connector-line"></div>
                   <div class="pl-connector-arrow"></div>
                 </div>
-                <div class="pl-node pl-orange">
+                <div class="pl-node pl-orange" data-tip="Docker Build：按照 Dockerfile
+将代码打包成镜像
+确保环境一致、可移植">
                   <div class="pl-node-box">🐳</div>
                   <div class="pl-node-name">Docker Build</div>
                 </div>
@@ -1094,7 +1197,9 @@ footer {
                   <div class="pl-connector-line"></div>
                   <div class="pl-connector-arrow"></div>
                 </div>
-                <div class="pl-node pl-orange">
+                <div class="pl-node pl-orange" data-tip="JUnit Test：运行单元测试
+验证每个函数逻辑正确
+失败则中断流水线">
                   <div class="pl-node-box">🧪</div>
                   <div class="pl-node-name">JUnit Test</div>
                 </div>
@@ -1102,7 +1207,9 @@ footer {
                   <div class="pl-connector-line"></div>
                   <div class="pl-connector-arrow"></div>
                 </div>
-                <div class="pl-node pl-orange">
+                <div class="pl-node pl-orange" data-tip="SonarQube：静态代码扫描
+检测代码质量、安全漏洞
+和技术债务，不达标则阻断">
                   <div class="pl-node-box">
                     🔍
                     <div class="pl-node-status status-warn"></div>
@@ -1113,7 +1220,9 @@ footer {
                   <div class="pl-connector-line"></div>
                   <div class="pl-connector-arrow"></div>
                 </div>
-                <div class="pl-node pl-yellow">
+                <div class="pl-node pl-yellow" data-tip="Harbor Push：将构建好的
+Docker 镜像推送到私有
+镜像仓库 Harbor 保存">
                   <div class="pl-node-box">
                     🚢
                     <div class="pl-node-status status-active"></div>
@@ -1128,13 +1237,17 @@ footer {
         <hr class="step-div">
 
         <div class="step">
-          <div class="step-num c-build">6</div>
+          <div class="step-num c-build" data-tip="Step 6：部署开发环境
+CI 通过后将镜像部署到
+K8S 开发命名空间供内部自测">6</div>
           <div class="step-content">
             <div class="step-label">从 Harbor 拉取镜像，发布至 K8S <span class="env-tag-test">开发环境</span></div>
             <div class="pipeline-diagram" style="padding:14px 16px;">
               <div class="pl-label">部署流程</div>
               <div class="pl-stages">
-                <div class="pl-node pl-yellow">
+                <div class="pl-node pl-yellow" data-tip="Harbor：私有 Docker 镜像仓库
+存储所有版本的镜像
+支持权限管理和镜像扫描">
                   <div class="pl-node-box">🚢</div>
                   <div class="pl-node-name">Harbor</div>
                 </div>
@@ -1142,7 +1255,9 @@ footer {
                   <div class="pl-connector-line"></div>
                   <div class="pl-connector-arrow"></div>
                 </div>
-                <div class="pl-node pl-cyan">
+                <div class="pl-node pl-cyan" data-tip="Kubernetes（K8S）：容器编排平台
+负责调度、运行和管理
+应用容器的生命周期">
                   <div class="pl-node-box">☸️</div>
                   <div class="pl-node-name">Kubernetes</div>
                 </div>
@@ -1150,7 +1265,9 @@ footer {
                   <div class="pl-connector-line"></div>
                   <div class="pl-connector-arrow"></div>
                 </div>
-                <div class="pl-node pl-green">
+                <div class="pl-node pl-green" data-tip="namespace: dev
+K8S 命名空间隔离环境
+dev 供开发自测，不影响其他环境">
                   <div class="pl-node-box">
                     💻
                     <div class="pl-node-status status-active"></div>
@@ -1165,19 +1282,27 @@ footer {
         <hr class="step-div">
 
         <div class="step">
-          <div class="step-num c-build">7</div>
+          <div class="step-num c-build" data-tip="Step 7：自动化测试
+部署到开发环境后立即触发
+三类自动化测试套件">7</div>
           <div class="step-content">
             <div class="step-label">🤖 自动化测试套件 — 部署后触发，覆盖三类测试</div>
             <div class="test-grid">
-              <div class="test-card">
+              <div class="test-card" data-tip="针对新功能的每个
+测试用例逐一执行，
+验证功能实现是否符合需求">
                 <div class="test-card-title">🧪 QA Testing</div>
                 <div class="test-card-desc">对新功能逐一验证测试用例，确保功能逻辑正确、交互符合预期</div>
               </div>
-              <div class="test-card">
+              <div class="test-card" data-tip="对全量历史功能重新跑一遍
+防止新代码引入副作用
+导致旧功能出现 Bug">
                 <div class="test-card-title">🔁 Regression Testing</div>
                 <div class="test-card-desc">对全量历史功能跑回归用例，防止新提交引入副作用</div>
               </div>
-              <div class="test-card">
+              <div class="test-card" data-tip="模拟大量并发请求
+测试接口响应速度和系统
+在高负载下的稳定性">
                 <div class="test-card-title">⚡ Performance Testing</div>
                 <div class="test-card-desc">模拟高并发对接口压测，评估响应时间、吞吐量与瓶颈</div>
               </div>
@@ -1213,13 +1338,16 @@ footer {
       <div class="phase-body">
 
         <div class="step">
-          <div class="step-num c-test">8</div>
+          <div class="step-num c-test" data-tip="Step 8：部署测试环境
+将镜像部署到专用测试命名
+空间，供 QA 团队测试">8</div>
           <div class="step-content">
             <div class="step-label">从 Harbor 拉取镜像，发布至 K8S <span style="color:#d500f9;font-weight:800;">测试环境</span></div>
             <div class="pipeline-diagram" style="padding:14px 16px;">
               <div class="pl-label">部署至测试环境</div>
               <div class="pl-stages">
-                <div class="pl-node pl-yellow">
+                <div class="pl-node pl-yellow" data-tip="Harbor：从镜像仓库拉取
+CI 阶段打包好的镜像版本">
                   <div class="pl-node-box">🚢</div>
                   <div class="pl-node-name">Harbor</div>
                 </div>
@@ -1227,7 +1355,9 @@ footer {
                   <div class="pl-connector-line"></div>
                   <div class="pl-connector-arrow"></div>
                 </div>
-                <div class="pl-node pl-cyan">
+                <div class="pl-node pl-cyan" data-tip="Kubernetes：将镜像部署
+为容器，管理副本数量
+和滚动更新策略">
                   <div class="pl-node-box">☸️</div>
                   <div class="pl-node-name">Kubernetes</div>
                 </div>
@@ -1235,7 +1365,10 @@ footer {
                   <div class="pl-connector-line"></div>
                   <div class="pl-connector-arrow"></div>
                 </div>
-                <div class="pl-node pl-purple">
+                <div class="pl-node pl-purple" data-tip="namespace: test
+独立的测试命名空间
+与开发和生产完全隔离
+供 QA 团队专项测试">
                   <div class="pl-node-box">
                     🧪
                     <div class="pl-node-status" style="background:#d500f9;animation:status-blink 1.5s infinite;"></div>
@@ -1250,13 +1383,19 @@ footer {
         <hr class="step-div">
 
         <div class="step">
-          <div class="step-num c-test">9</div>
+          <div class="step-num c-test" data-tip="Step 9：功能测试
+QA 工程师按照需求文档
+逐一验证每个功能点">9</div>
           <div class="step-content">
             <div class="step-label">🧪 功能测试 — 验证新功能是否符合需求规格</div>
             <div class="chips">
-              <div class="chip chip-purple">🔎 QA 环境</div>
-              <div class="chip chip-purple">✅ 功能验证</div>
-              <div class="chip chip-purple">🐛 缺陷追踪</div>
+              <div class="chip chip-purple" data-tip="在独立的 QA 测试环境中
+进行测试，不影响其他环境">🔎 QA 环境</div>
+              <div class="chip chip-purple" data-tip="逐条验证测试用例
+确认功能行为与需求一致">✅ 功能验证</div>
+              <div class="chip chip-purple" data-tip="发现 Bug 后在飞书或
+缺陷管理系统中记录
+指派给开发修复">🐛 缺陷追踪</div>
             </div>
           </div>
         </div>
@@ -1264,25 +1403,38 @@ footer {
         <hr class="step-div">
 
         <div class="step">
-          <div class="step-num c-test">10</div>
+          <div class="step-num c-test" data-tip="Step 10：回归测试
+防止新功能引入副作用
+导致历史功能异常">10</div>
           <div class="step-content">
             <div class="step-label">🔁 回归测试 — 确保新代码不破坏已有稳定功能</div>
             <div class="chips">
-              <div class="chip chip-purple">🔄 全量回归</div>
-              <div class="chip chip-purple">⚡ 冒烟测试</div>
-              <div class="chip chip-purple">📊 性能压测</div>
+              <div class="chip chip-purple" data-tip="对所有历史功能重新
+执行完整测试用例集">🔄 全量回归</div>
+              <div class="chip chip-purple" data-tip="冒烟测试：快速验证
+最核心的主流程是否正常
+通常几分钟内完成">⚡ 冒烟测试</div>
+              <div class="chip chip-purple" data-tip="模拟真实流量压力
+确认性能指标在正式
+上线后不会劣化">📊 性能压测</div>
             </div>
           </div>
         </div>
 
         <div class="step">
-          <div class="step-num c-test">11</div>
+          <div class="step-num c-test" data-tip="Step 11：QA 签字
+QA 负责人确认所有测试
+通过后正式出具测试报告">11</div>
           <div class="step-content">
             <div class="step-label">📋 QA 验收 — 测试通过后由 QA 负责人签字确认</div>
             <div class="chips">
-              <div class="chip chip-purple">✅ QA Sign-off</div>
+              <div class="chip chip-purple" data-tip="QA Sign-off：测试负责人
+正式签字，表示测试完成
+可以进入下一阶段">✅ QA Sign-off</div>
               <span class="chip-arrow">→</span>
-              <div class="chip chip-white">📤 通知业务方验收</div>
+              <div class="chip chip-white" data-tip="通知业务方进行验收
+业务侧按真实场景
+确认功能是否符合预期">📤 通知业务方验收</div>
             </div>
           </div>
         </div>
@@ -1290,13 +1442,19 @@ footer {
         <hr class="step-div">
 
         <div class="step">
-          <div class="step-num c-test">12</div>
+          <div class="step-num c-test" data-tip="Step 12：业务方验收
+非技术的业务同事在测试
+环境中按真实使用场景验收">12</div>
           <div class="step-content">
             <div class="step-label">🧑‍💼 业务方验收 — 在测试环境按真实业务场景验收</div>
             <div class="chips">
-              <div class="chip chip-purple">🔎 测试环境</div>
-              <div class="chip chip-purple">🧑‍💼 业务方确认</div>
-              <div class="chip chip-purple">📝 验收报告</div>
+              <div class="chip chip-purple" data-tip="在测试环境中进行
+确保不影响线上用户">🔎 测试环境</div>
+              <div class="chip chip-purple" data-tip="业务方按照真实工作流
+逐步操作，确认功能
+符合业务目标">🧑‍💼 业务方确认</div>
+              <div class="chip chip-purple" data-tip="验收通过后出具书面报告
+作为上线的正式依据">📝 验收报告</div>
             </div>
           </div>
         </div>
@@ -1304,13 +1462,19 @@ footer {
         <hr class="step-div">
 
         <div class="step">
-          <div class="step-num c-test">13</div>
+          <div class="step-num c-test" data-tip="Step 13：上线审批
+有了验收报告后走审批流程
+获得授权才能发布到生产">13</div>
           <div class="step-content">
             <div class="step-label">🚀 上线审批 — 验收通过后审批，发布至 K8S 正式环境</div>
             <div class="chips">
-              <div class="chip chip-white">✔ 审批通过</div>
+              <div class="chip chip-white" data-tip="审批通过：由技术负责人
+或管理者确认，授权
+在指定时间窗口发布">✔ 审批通过</div>
               <span class="chip-arrow">→</span>
-              <div class="chip chip-red">🚀 发布正式环境</div>
+              <div class="chip chip-red" data-tip="触发 CD 流水线
+将镜像部署到生产命名空间
+真正对外提供服务">🚀 发布正式环境</div>
             </div>
           </div>
         </div>
@@ -1343,13 +1507,16 @@ footer {
       <div class="phase-body">
 
         <div class="step">
-          <div class="step-num c-release">14</div>
+          <div class="step-num c-release" data-tip="Step 14：生产发布
+经审批后将镜像部署到
+K8S 生产命名空间，正式上线">14</div>
           <div class="step-content">
             <div class="step-label">从 Harbor 拉取镜像，发布至 K8S <span class="env-tag-prod">正式环境</span></div>
             <div class="pipeline-diagram" style="padding:14px 16px;">
               <div class="pl-label">生产发布</div>
               <div class="pl-stages">
-                <div class="pl-node pl-yellow">
+                <div class="pl-node pl-yellow" data-tip="Harbor：拉取经过完整
+CI/CD 验证的稳定版本镜像">
                   <div class="pl-node-box">🚢</div>
                   <div class="pl-node-name">Harbor</div>
                 </div>
@@ -1357,7 +1524,9 @@ footer {
                   <div class="pl-connector-line"></div>
                   <div class="pl-connector-arrow"></div>
                 </div>
-                <div class="pl-node pl-cyan">
+                <div class="pl-node pl-cyan" data-tip="Kubernetes：生产集群
+执行滚动更新，逐步
+替换旧版本 Pod">
                   <div class="pl-node-box">☸️</div>
                   <div class="pl-node-name">Kubernetes</div>
                 </div>
@@ -1365,7 +1534,9 @@ footer {
                   <div class="pl-connector-line"></div>
                   <div class="pl-connector-arrow"></div>
                 </div>
-                <div class="pl-node pl-red">
+                <div class="pl-node pl-red" data-tip="namespace: prod
+生产命名空间，真实用户
+流量在此运行，需谨慎操作">
                   <div class="pl-node-box">
                     🚀
                     <div class="pl-node-status status-active"></div>
@@ -1378,14 +1549,24 @@ footer {
         </div>
 
         <div class="step">
-          <div class="step-num c-release">15</div>
+          <div class="step-num c-release" data-tip="Step 15：生产验证
+上线后立即执行验证
+确认核心功能在生产正常">15</div>
           <div class="step-content">
             <div class="step-label">🔍 正式环境验证 — 冒烟测试 · 核心功能巡检 · 监控确认</div>
             <div class="chips">
-              <div class="chip chip-red">💨 冒烟测试</div>
-              <div class="chip chip-red">🔎 核心功能巡检</div>
-              <div class="chip chip-red">📊 监控指标确认</div>
-              <div class="chip chip-red">✅ 上线确认</div>
+              <div class="chip chip-red" data-tip="在生产环境快速跑核心
+流程，确认上线没有引入
+明显的功能性问题">💨 冒烟测试</div>
+              <div class="chip chip-red" data-tip="人工或自动巡检
+关键业务路径，确保
+主要功能正常可用">🔎 核心功能巡检</div>
+              <div class="chip chip-red" data-tip="查看 Grafana 看板
+确认 CPU、内存、QPS
+等指标无异常波动">📊 监控指标确认</div>
+              <div class="chip chip-red" data-tip="发布团队签字确认
+通知相关人员上线完成
+进入持续监控状态">✅ 上线确认</div>
             </div>
           </div>
         </div>
@@ -1394,27 +1575,40 @@ footer {
 
         <!-- Observability animated flow -->
         <div class="step">
-          <div class="step-num c-release" style="font-size:0.6rem;background:rgba(255,23,68,0.15);color:#ff5252;border:1px solid rgba(255,23,68,0.4);">OBS</div>
+          <div class="step-num c-release" style="font-size:0.6rem;background:rgba(255,23,68,0.15);color:#ff5252;border:1px solid rgba(255,23,68,0.4);" data-tip="可观测性（Observability）：
+通过指标、追踪、日志三大支柱
+全面了解系统运行状态">OBS</div>
           <div class="step-content">
             <div class="step-label">📡 全链路可观测性 — Prometheus · SkyWalking → Grafana → 飞书告警</div>
             <div class="obs-flow">
               <!-- Sources -->
               <div class="obs-sources">
                 <div class="obs-source-row">
-                  <div class="obs-node obs-k8s">☸️ K8S 集群</div>
+                  <div class="obs-node obs-k8s" data-tip="K8S 集群：持续暴露
+容器运行时指标（CPU、
+内存、网络、存储）">☸️ K8S 集群</div>
                   <div class="obs-connector obs-c-prom">
                     <div class="obs-line"></div>
                     <div class="obs-arrow-head"></div>
                   </div>
-                  <div class="obs-node obs-prom">📡 Prometheus<span class="obs-sub">指标采集 / PromQL / 告警规则</span></div>
+                  <div class="obs-node obs-prom" data-tip="Prometheus：时序指标采集
+· 定期 scrape 指标端点
+· PromQL 灵活查询
+· Alertmanager 触发告警">📡 Prometheus<span class="obs-sub">指标采集 / PromQL / 告警规则</span></div>
                 </div>
                 <div class="obs-source-row" style="margin-top:10px;">
-                  <div class="obs-node obs-k8s">☸️ K8S 集群</div>
+                  <div class="obs-node obs-k8s" data-tip="K8S 集群：应用通过
+SkyWalking Agent 上报
+每次请求的链路追踪数据">☸️ K8S 集群</div>
                   <div class="obs-connector obs-c-sky">
                     <div class="obs-line"></div>
                     <div class="obs-arrow-head"></div>
                   </div>
-                  <div class="obs-node obs-sky">🔭 SkyWalking<span class="obs-sub">链路追踪 / 服务拓扑 / 慢查询</span></div>
+                  <div class="obs-node obs-sky" data-tip="SkyWalking：分布式 APM
+· 追踪请求在各微服务间
+的完整链路和耗时
+· 生成服务拓扑图
+· 分析慢查询根因">🔭 SkyWalking<span class="obs-sub">链路追踪 / 服务拓扑 / 慢查询</span></div>
                 </div>
               </div>
               <!-- Converge → Grafana -->
@@ -1422,13 +1616,20 @@ footer {
                 <div class="obs-line"></div>
                 <div class="obs-arrow-head"></div>
               </div>
-              <div class="obs-node obs-graf">📊 Grafana<span class="obs-sub">统一可视化看板</span></div>
+              <div class="obs-node obs-graf" data-tip="Grafana：统一可视化平台
+· 同时接入 Prometheus
+  和 SkyWalking 数据源
+· 自定义监控大盘
+· 实时图表展示">📊 Grafana<span class="obs-sub">统一可视化看板</span></div>
               <!-- Grafana → Feishu -->
               <div class="obs-connector obs-c-feishu" style="width:36px;margin:0 4px;">
                 <div class="obs-line"></div>
                 <div class="obs-arrow-head"></div>
               </div>
-              <div class="obs-node obs-feishu">🔵 飞书告警<span class="obs-sub">Webhook 通知</span></div>
+              <div class="obs-node obs-feishu" data-tip="飞书告警：当指标触发
+阈值时通过 Webhook
+自动推送告警消息到
+飞书群，及时通知 OnCall">🔵 飞书告警<span class="obs-sub">Webhook 通知</span></div>
             </div>
           </div>
         </div>
@@ -1437,19 +1638,30 @@ footer {
 
         <!-- Release strategies -->
         <div class="step">
-          <div class="step-num c-release">–</div>
+          <div class="step-num c-release" data-tip="高级发布策略：降低
+直接全量发布的风险
+通过精细化控制验证新版本">–</div>
           <div class="step-content">
             <div class="step-label">🎯 高级发布策略 — 降低上线风险，快速验证与回滚</div>
             <div class="strategy-grid">
-              <div class="rs-card">
+              <div class="rs-card" data-tip="Feature Toggle：在代码中
+预埋开关，通过配置平台
+随时开启/关闭功能
+无需重新发版，秒级回滚">
                 <div class="rs-title">🔀 Feature Toggle</div>
                 <div class="rs-desc">功能开关，通过配置动态开启或关闭某个功能，无需重新部署，快速回滚</div>
               </div>
-              <div class="rs-card">
+              <div class="rs-card" data-tip="金丝雀发布：先把新版本
+发给 5% 的用户，观察错误
+率和性能，稳定后再逐步
+扩大比例到 100%">
                 <div class="rs-title">🐦 Canary Deploy</div>
                 <div class="rs-desc">金丝雀发布，先将新版本灰度给小比例用户（如 5%），观察稳定后逐步扩量至全量</div>
               </div>
-              <div class="rs-card">
+              <div class="rs-card" data-tip="A/B 测试：同时运行两个
+版本，通过埋点数据对比
+转化率、留存率等指标
+用数据驱动产品决策">
                 <div class="rs-title">🧪 A/B Test</div>
                 <div class="rs-desc">将用户随机分成 A/B 两组，分别体验不同版本，通过数据对比决策最优方案</div>
               </div>
@@ -1465,8 +1677,79 @@ footer {
 
 
 
+<div id="tooltip"><div id="tooltip-inner"></div><div id="tooltip-arrow"></div></div>
+
 <script>
-// ── SCROLL PROGRESS ──
+// ── TOOLTIP ENGINE ──
+const tip = document.getElementById('tooltip');
+const tipInner = document.getElementById('tooltip-inner');
+const tipArrow = document.getElementById('tooltip-arrow');
+let activeEl = null;
+
+function showTip(el) {
+  const text = el.getAttribute('data-tip');
+  if (!text) return;
+  tipInner.textContent = text;
+  tip.classList.add('show');
+  positionTip(el);
+  activeEl = el;
+}
+
+function hideTip() {
+  tip.classList.remove('show');
+  activeEl = null;
+}
+
+function positionTip(el) {
+  const rect = el.getBoundingClientRect();
+  const tw = tip.offsetWidth;
+  const th = tip.offsetHeight;
+  const margin = 10;
+
+  // Prefer above
+  let top = rect.top - th - 10;
+  let left = rect.left + rect.width / 2 - tw / 2;
+
+  // Flip below if not enough room
+  const below = top < margin;
+  if (below) {
+    top = rect.bottom + 10;
+    tipArrow.style.top = '-7px';
+    tipArrow.style.bottom = 'auto';
+    tipArrow.style.borderTop = 'none';
+    tipArrow.style.borderBottom = '7px solid rgba(255,255,255,0.14)';
+  } else {
+    tipArrow.style.bottom = '-7px';
+    tipArrow.style.top = 'auto';
+    tipArrow.style.borderBottom = 'none';
+    tipArrow.style.borderTop = '7px solid rgba(255,255,255,0.14)';
+  }
+
+  // Clamp horizontal
+  left = Math.max(margin, Math.min(left, window.innerWidth - tw - margin));
+
+  // Arrow position relative to tooltip
+  const arrowCenter = rect.left + rect.width / 2 - left;
+  const clampedArrow = Math.max(12, Math.min(arrowCenter, tw - 12));
+  tipArrow.style.left = clampedArrow + 'px';
+  tipArrow.style.transform = 'none';
+
+  tip.style.left = left + 'px';
+  tip.style.top = top + 'px';
+}
+
+document.addEventListener('mouseover', e => {
+  const el = e.target.closest('[data-tip]');
+  if (el && el !== activeEl) showTip(el);
+});
+document.addEventListener('mouseout', e => {
+  const el = e.target.closest('[data-tip]');
+  if (el) hideTip();
+});
+window.addEventListener('scroll', () => {
+  if (activeEl) positionTip(activeEl);
+}, { passive: true });
+
 window.addEventListener('scroll', () => {
   const el = document.getElementById('progress');
   const h = document.documentElement.scrollHeight - window.innerHeight;
