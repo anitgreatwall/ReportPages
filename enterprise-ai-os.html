@@ -313,6 +313,31 @@
   .platform-header {
     padding: 24px 24px 16px;
     border-bottom: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+  }
+  .header-tags {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+  .header-link {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 4px 13px;
+    background: rgba(124,58,237,0.15);
+    border: 1px solid rgba(124,58,237,0.5);
+    border-radius: 12px;
+    color: #A78BFA; font-size: 11px; font-weight: 600;
+    text-decoration: none; letter-spacing: 0.05em;
+    font-family: var(--ff-mono);
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .header-link:hover {
+    background: rgba(124,58,237,0.3);
+    border-color: #A78BFA;
   }
   .platform-title { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 6px; }
   .platform-sub {
@@ -866,7 +891,9 @@
       <div class="platform-header">
         <div class="platform-title">办公协同智能化平台</div>
         <div class="platform-sub">FEISHU / LARK · 已上线</div>
-        <span class="status-tag online">已上线运行</span>
+        <div class="header-tags">
+          <span class="status-tag online">已上线</span>
+        </div>
       </div>
       <div class="platform-features">
         <div class="feature-item">
@@ -901,7 +928,9 @@
       <div class="platform-header">
         <div class="platform-title">运营管理智能化平台</div>
         <div class="platform-sub">CUSTOM BUILD · 自建 · 智能制造场景</div>
-        <span class="status-tag building">建设中</span>
+        <div class="header-tags">
+          <span class="status-tag building">建设中</span>
+        </div>
       </div>
       <div class="platform-features">
         <!-- Sub-label: R&D -->
@@ -954,14 +983,14 @@
       <div class="platform-header">
         <div class="platform-title">技术开发智能化平台</div>
         <div class="platform-sub">DEVTOOLS + LLM SERVICE</div>
-        <span class="status-tag planning">规划中</span>
-        <a href="ship-code.html"
-           onclick="event.stopPropagation()"
-           style="display:inline-flex;align-items:center;gap:6px;margin-top:12px;padding:7px 16px;background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.5);border-radius:20px;color:#A78BFA;font-size:12px;font-weight:600;text-decoration:none;letter-spacing:0.06em;transition:all 0.2s;"
-           onmouseover="this.style.background='rgba(124,58,237,0.3)';this.style.borderColor='#A78BFA'"
-           onmouseout="this.style.background='rgba(124,58,237,0.15)';this.style.borderColor='rgba(124,58,237,0.5)'">
-          &#x279C;&nbsp;查看详细方案
-        </a>
+        <div class="header-tags">
+          <span class="status-tag planning">规划中</span>
+          <a href="ship-code.html"
+             onclick="event.stopPropagation()"
+             class="header-link">
+            &#x279C;&nbsp;查看详细方案
+          </a>
+        </div>
       </div>
       <div class="platform-features">
         <div class="feature-item">
@@ -1787,6 +1816,8 @@
   }
   setVh();
   window.addEventListener('resize', setVh, { passive: true });
+
+
 </script>
 </body>
 </html>
