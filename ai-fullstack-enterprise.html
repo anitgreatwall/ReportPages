@@ -1,0 +1,1561 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>企业智能操作系统 · AI 全栈体系</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=IBM+Plex+Mono:wght@400;500;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #060810;
+  --s1: #0d1117;
+  --s2: #111827;
+  --s3: #1a2232;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.12);
+  --text: #dde6f0;
+  --muted: #6b7a99;
+  --dim: #3d4a63;
+
+  /* Layer Colors */
+  --c-infra:    #3b82f6;
+  --c-perceive: #8b5cf6;
+  --c-reason:   #ec4899;
+  --c-skill:    #06b6d4;
+  --c-orch:     #f59e0b;
+  --c-connect:  #10b981;
+  --c-exec:     #ef4444;
+  --c-gov:      #a78bfa;
+  --c-deliver:  #fb923c;
+
+  --mono: 'IBM Plex Mono', monospace;
+  --serif: 'Noto Serif SC', serif;
+  --sans: 'Noto Sans SC', sans-serif;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  overflow-x: hidden;
+  line-height: 1.7;
+}
+
+/* noise */
+body::after {
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  opacity:0.025;pointer-events:none;z-index:9999;
+}
+
+/* ── NAV ── */
+nav {
+  position:fixed;top:0;left:0;right:0;z-index:500;
+  height:56px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 40px;
+  background:rgba(6,8,16,0.85);
+  backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--border);
+}
+.nav-brand {
+  font-family:var(--mono);font-size:12px;
+  letter-spacing:3px;color:var(--c-connect);
+  display:flex;align-items:center;gap:10px;
+}
+.nav-dot {width:6px;height:6px;border-radius:50%;background:var(--c-connect);animation:blink 2s ease infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
+.nav-layers {
+  display:flex;gap:4px;align-items:center;
+}
+.nav-layer {
+  padding:3px 10px;border-radius:4px;
+  font-family:var(--mono);font-size:10px;letter-spacing:1px;
+  border:1px solid transparent;
+  cursor:pointer;transition:all 0.2s;
+  color:var(--muted);
+}
+.nav-layer:hover { color:var(--text);border-color:var(--border2); }
+
+/* ── HERO ── */
+.hero {
+  min-height:100vh;position:relative;overflow:hidden;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:100px 60px 80px;
+}
+
+.hero-mesh {
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 70% 50% at 15% 30%, rgba(59,130,246,0.12) 0%,transparent 65%),
+    radial-gradient(ellipse 50% 60% at 85% 70%, rgba(139,92,246,0.1) 0%,transparent 65%),
+    radial-gradient(ellipse 40% 40% at 50% 50%, rgba(16,185,129,0.06) 0%,transparent 60%);
+}
+
+.hero-grid {
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,0.025) 1px,transparent 1px);
+  background-size:80px 80px;
+}
+
+.hero-kicker {
+  font-family:var(--mono);font-size:11px;letter-spacing:4px;
+  color:var(--c-connect);text-transform:uppercase;
+  display:flex;align-items:center;gap:12px;
+  margin-bottom:28px;opacity:0;animation:riseIn 0.7s 0.1s ease forwards;
+}
+.hero-kicker::before{content:'';width:32px;height:1px;background:var(--c-connect);}
+
+.hero-h1 {
+  font-family:var(--serif);
+  font-size:clamp(44px,7vw,92px);
+  font-weight:900;line-height:1.05;
+  margin-bottom:8px;
+  opacity:0;animation:riseIn 0.8s 0.2s ease forwards;
+}
+.hero-h1 em {
+  font-style:normal;
+  background:linear-gradient(90deg,var(--c-infra),var(--c-perceive),var(--c-connect));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+
+.hero-h2 {
+  font-family:var(--serif);
+  font-size:clamp(28px,4vw,56px);
+  font-weight:400;color:var(--muted);line-height:1.2;
+  margin-bottom:36px;
+  opacity:0;animation:riseIn 0.8s 0.3s ease forwards;
+}
+
+.hero-desc {
+  max-width:580px;font-size:15px;color:var(--muted);line-height:1.9;
+  opacity:0;animation:riseIn 0.8s 0.4s ease forwards;
+}
+
+.hero-stats {
+  display:flex;gap:48px;margin-top:56px;
+  opacity:0;animation:riseIn 0.8s 0.5s ease forwards;
+}
+.stat-num {
+  font-family:var(--serif);font-size:42px;font-weight:900;
+  background:linear-gradient(135deg,#fff,rgba(255,255,255,0.5));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  line-height:1;
+}
+.stat-label { font-size:12px;color:var(--muted);margin-top:4px;font-family:var(--mono);letter-spacing:1px; }
+
+.hero-scroll-hint {
+  position:absolute;bottom:36px;left:60px;
+  font-family:var(--mono);font-size:10px;letter-spacing:3px;
+  color:var(--dim);display:flex;align-items:center;gap:12px;
+  opacity:0;animation:riseIn 1s 0.8s ease forwards;
+}
+.hero-scroll-hint::after{content:'';width:60px;height:1px;background:var(--dim);}
+
+@keyframes riseIn {
+  from{opacity:0;transform:translateY(24px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+/* ── STACK OVERVIEW ── */
+.stack-section {
+  padding:100px 60px;
+  position:relative;
+}
+
+.sec-label {
+  font-family:var(--mono);font-size:10px;letter-spacing:4px;
+  text-transform:uppercase;color:var(--muted);
+  margin-bottom:12px;
+}
+
+.sec-title {
+  font-family:var(--serif);
+  font-size:clamp(28px,4vw,48px);
+  font-weight:700;line-height:1.2;
+  margin-bottom:16px;
+}
+
+.sec-sub {
+  font-size:15px;color:var(--muted);
+  max-width:560px;line-height:1.8;
+  margin-bottom:64px;
+}
+
+/* ── LAYER MAP ── */
+.layer-map {
+  display:flex;flex-direction:column;gap:3px;
+  font-family:var(--mono);
+}
+
+.layer-row {
+  display:grid;
+  grid-template-columns:140px 1fr;
+  gap:3px;
+  opacity:0;transform:translateX(-16px);
+  transition:all 0.6s cubic-bezier(0.4,0,0.2,1);
+}
+.layer-row.vis{opacity:1;transform:translateX(0);}
+
+.layer-label {
+  display:flex;align-items:center;gap:10px;
+  padding:16px 20px;
+  background:var(--s1);
+  border:1px solid var(--border);
+  border-radius:8px 0 0 8px;
+  font-size:10px;letter-spacing:2px;
+  color:var(--layer-color);
+  white-space:nowrap;
+  border-left:3px solid var(--layer-color);
+}
+
+.layer-cells {
+  display:flex;gap:3px;flex-wrap:wrap;
+}
+
+.layer-cell {
+  flex:1;min-width:100px;
+  padding:14px 16px;
+  background:var(--s1);
+  border:1px solid var(--border);
+  border-radius:4px;
+  cursor:pointer;
+  transition:all 0.25s;
+  position:relative;
+  overflow:hidden;
+}
+.layer-cell::before {
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at 30% 50%,var(--layer-color),transparent 70%);
+  opacity:0;transition:opacity 0.3s;
+}
+.layer-cell:hover{background:var(--s2);border-color:rgba(255,255,255,0.15);}
+.layer-cell:hover::before{opacity:0.06;}
+
+.cell-name{font-size:11px;font-weight:700;color:var(--layer-color);letter-spacing:1px;margin-bottom:3px;}
+.cell-zh{font-size:10px;color:var(--muted);}
+
+/* ── DETAIL SECTIONS ── */
+.detail-section {
+  padding:80px 60px;
+  border-top:1px solid var(--border);
+  position:relative;
+  overflow:hidden;
+}
+
+.detail-section::before {
+  content:'';
+  position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(to right,var(--layer-color,transparent),rgba(255,255,255,0.06),transparent);
+}
+
+.detail-header {
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:40px;margin-bottom:64px;flex-wrap:wrap;
+}
+
+.dh-left {}
+
+.layer-badge {
+  display:inline-flex;align-items:center;gap:8px;
+  padding:5px 14px;border-radius:100px;
+  font-family:var(--mono);font-size:10px;letter-spacing:2px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid var(--layer-color);
+  color:var(--layer-color);
+  margin-bottom:20px;
+}
+.badge-dot{width:5px;height:5px;border-radius:50%;background:var(--layer-color);}
+
+.detail-title {
+  font-family:var(--serif);
+  font-size:clamp(26px,3.5vw,42px);
+  font-weight:700;line-height:1.2;
+  margin-bottom:14px;
+}
+.detail-title span{color:var(--layer-color);}
+
+.detail-desc {
+  font-size:14px;color:var(--muted);line-height:1.9;
+  max-width:520px;
+}
+
+.dh-right {
+  flex:0 0 auto;
+}
+
+/* ── CONCEPT CARDS ── */
+.concepts-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+  gap:16px;
+  margin-bottom:48px;
+}
+
+.c-card {
+  background:var(--s1);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:28px 24px;
+  position:relative;overflow:hidden;
+  cursor:pointer;
+  transition:all 0.3s;
+}
+.c-card::after {
+  content:'';position:absolute;
+  top:0;left:0;right:0;height:2px;
+  background:var(--layer-color);
+  transform:scaleX(0);transform-origin:left;
+  transition:transform 0.3s;
+}
+.c-card:hover{background:var(--s2);border-color:var(--border2);transform:translateY(-2px);}
+.c-card:hover::after{transform:scaleX(1);}
+
+.c-card-icon{font-size:22px;margin-bottom:14px;}
+.c-card-name{
+  font-family:var(--mono);font-size:12px;font-weight:700;
+  color:var(--layer-color);letter-spacing:1px;margin-bottom:4px;
+}
+.c-card-zh{font-size:13px;font-weight:600;color:var(--text);margin-bottom:10px;}
+.c-card-desc{font-size:13px;color:var(--muted);line-height:1.7;}
+.c-card-tags{
+  display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;
+}
+.c-tag{
+  font-family:var(--mono);font-size:9px;letter-spacing:1px;
+  padding:2px 8px;border-radius:3px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+  color:var(--muted);
+}
+
+/* ── INTERACTIVE DEMO PANELS ── */
+.demo-panel {
+  background:var(--s1);border:1px solid var(--border);
+  border-radius:16px;overflow:hidden;margin-top:16px;
+}
+.dp-bar {
+  padding:12px 18px;background:var(--s2);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:8px;
+}
+.dp-dot{width:9px;height:9px;border-radius:50%;}
+.dp-title{font-family:var(--mono);font-size:10px;color:var(--muted);margin-left:6px;letter-spacing:1px;}
+.dp-body{padding:24px;}
+
+/* Terminal */
+.terminal {
+  background:#000;border-radius:10px;
+  font-family:var(--mono);font-size:12px;
+  line-height:1.7;padding:20px;
+  min-height:120px;border:1px solid rgba(255,255,255,0.06);
+}
+.t-line{display:flex;gap:8px;opacity:0;transform:translateY(4px);transition:all 0.35s;}
+.t-line.show{opacity:1;transform:translateY(0);}
+.t-p{color:#10b981;}
+.t-cmd{color:#fff;}
+.t-out{color:var(--muted);}
+.t-ok{color:#10b981;}
+.t-warn{color:#f59e0b;}
+.t-err{color:#ef4444;}
+.t-hi{color:var(--layer-color,#06b6d4);}
+
+/* ── ARCH DIAGRAM ── */
+.arch-diagram {
+  position:relative;
+  background:var(--s1);
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:32px;
+  overflow:hidden;
+}
+
+/* ── FULL STACK DIAGRAM ── */
+.fullstack {
+  padding:100px 60px;
+  background:var(--s1);
+}
+
+.fs-pyramid {
+  display:flex;flex-direction:column;
+  gap:2px;max-width:900px;margin:64px auto 0;
+}
+
+.fs-layer {
+  display:flex;align-items:stretch;gap:2px;
+  position:relative;
+  opacity:0;transform:translateY(20px);
+  transition:all 0.5s cubic-bezier(0.4,0,0.2,1);
+}
+.fs-layer.vis{opacity:1;transform:translateY(0);}
+
+.fs-layer-label {
+  width:120px;flex-shrink:0;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:16px;
+  background:rgba(0,0,0,0.3);
+  border:1px solid var(--border);
+  border-right:none;
+  border-radius:8px 0 0 8px;
+}
+.fsl-num{font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:2px;margin-bottom:4px;}
+.fsl-name{font-size:12px;font-weight:700;color:var(--layer-c);}
+.fsl-en{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:1px;margin-top:2px;}
+
+.fs-layer-items {
+  flex:1;display:flex;gap:2px;flex-wrap:wrap;align-content:stretch;
+}
+
+.fs-item {
+  flex:1;min-width:90px;
+  padding:14px 12px;
+  background:rgba(0,0,0,0.25);
+  border:1px solid var(--border);
+  border-radius:4px;
+  cursor:pointer;
+  transition:all 0.2s;
+  position:relative;overflow:hidden;
+}
+.fs-item::before{
+  content:'';position:absolute;inset:0;
+  background:var(--layer-c);opacity:0;transition:opacity 0.3s;
+}
+.fs-item:hover::before{opacity:0.06;}
+.fs-item:hover{border-color:rgba(255,255,255,0.15);}
+
+.fsi-name{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--layer-c);letter-spacing:0.5px;margin-bottom:2px;}
+.fsi-zh{font-size:10px;color:var(--muted);}
+
+/* ── INTEGRATION SCENARIO ── */
+.scenario-section {
+  padding:100px 60px;
+  background:linear-gradient(to bottom,var(--bg),var(--s1));
+}
+
+.scenario-board {
+  background:var(--s1);
+  border:1px solid var(--border);
+  border-radius:24px;
+  overflow:hidden;
+  margin-top:48px;
+}
+
+.scenario-tabs {
+  display:flex;border-bottom:1px solid var(--border);
+  background:var(--s2);overflow-x:auto;
+}
+.s-tab {
+  padding:14px 24px;font-family:var(--mono);font-size:11px;
+  letter-spacing:1px;color:var(--muted);cursor:pointer;
+  border-bottom:2px solid transparent;transition:all 0.2s;
+  white-space:nowrap;
+}
+.s-tab.active{color:var(--text);border-color:var(--c-connect);}
+.s-tab:hover{color:var(--text);}
+
+.scenario-content { padding:40px; }
+
+.sc-panel { display:none; }
+.sc-panel.active { display:block; }
+
+.sc-flow {
+  display:flex;flex-direction:column;gap:0;
+}
+
+.sc-step {
+  display:grid;grid-template-columns:200px 1fr auto;
+  gap:20px;padding:20px 0;
+  border-bottom:1px solid var(--border);
+  align-items:center;
+  opacity:0;transform:translateX(-12px);
+  transition:all 0.4s;
+}
+.sc-step:last-child{border-bottom:none;}
+.sc-step.vis{opacity:1;transform:translateX(0);}
+
+.sc-actor{
+  display:flex;align-items:center;gap:10px;
+}
+.sc-actor-dot{
+  width:8px;height:8px;border-radius:50%;flex-shrink:0;
+  box-shadow:0 0 8px var(--dot-c);
+  background:var(--dot-c);
+}
+.sc-actor-info{}
+.sc-actor-layer{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--muted);margin-bottom:2px;}
+.sc-actor-name{font-size:13px;font-weight:600;color:var(--dot-c);}
+
+.sc-action{font-size:13px;color:var(--muted);line-height:1.7;}
+.sc-action strong{color:var(--text);font-weight:500;}
+
+.sc-badge{
+  font-family:var(--mono);font-size:9px;letter-spacing:1px;
+  padding:4px 10px;border-radius:3px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid var(--border);
+  color:var(--muted);white-space:nowrap;
+}
+
+/* ── GLOSSARY ── */
+.glossary-section {
+  padding:100px 60px;
+  border-top:1px solid var(--border);
+}
+
+.glossary-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:12px;
+  margin-top:48px;
+}
+
+.glos-card {
+  background:var(--s1);border:1px solid var(--border);
+  border-radius:10px;padding:20px;
+  transition:all 0.2s;
+}
+.glos-card:hover{border-color:var(--border2);background:var(--s2);}
+.glos-term{
+  font-family:var(--mono);font-size:11px;font-weight:700;
+  color:var(--g-color,var(--muted));letter-spacing:1px;margin-bottom:2px;
+}
+.glos-zh{font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;}
+.glos-def{font-size:12px;color:var(--muted);line-height:1.7;}
+
+/* ── FADE IN ── */
+.fade-up{opacity:0;transform:translateY(32px);transition:all 0.7s cubic-bezier(0.4,0,0.2,1);}
+.fade-up.vis{opacity:1;transform:translateY(0);}
+
+/* ── FOOTER ── */
+footer{
+  padding:80px 60px;border-top:1px solid var(--border);
+  display:grid;grid-template-columns:1fr auto;gap:40px;
+  align-items:end;
+}
+.ft-left{}
+.ft-title{font-family:var(--serif);font-size:28px;font-weight:700;margin-bottom:12px;}
+.ft-desc{font-size:13px;color:var(--muted);line-height:1.8;}
+.ft-layers{
+  display:flex;flex-direction:column;gap:8px;align-items:flex-end;
+}
+.ft-layer-row{
+  display:flex;gap:4px;align-items:center;
+}
+.ft-dot{width:6px;height:6px;border-radius:50%;}
+.ft-name{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:1px;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .hero,.stack-section,.detail-section,.fullstack,.scenario-section,.glossary-section{padding:80px 24px;}
+  footer{grid-template-columns:1fr;padding:60px 24px;}
+  .ft-layers{align-items:flex-start;}
+  nav{padding:0 20px;}
+  .nav-layers{display:none;}
+  .sc-step{grid-template-columns:1fr;gap:10px;}
+  .fs-layer-label{width:80px;}
+}
+
+/* scrollbar */
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--dim);border-radius:2px;}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">
+    <div class="nav-dot"></div>
+    ENTERPRISE · AI · OS
+  </div>
+  <div class="nav-layers">
+    <div class="nav-layer" onclick="scrollTo('#infra')">基础</div>
+    <div class="nav-layer" onclick="scrollTo('#perceive')">感知</div>
+    <div class="nav-layer" onclick="scrollTo('#reason')">推理</div>
+    <div class="nav-layer" onclick="scrollTo('#skill')">能力</div>
+    <div class="nav-layer" onclick="scrollTo('#orch')">编排</div>
+    <div class="nav-layer" onclick="scrollTo('#connect')">连接</div>
+    <div class="nav-layer" onclick="scrollTo('#exec')">执行</div>
+    <div class="nav-layer" onclick="scrollTo('#gov')">治理</div>
+    <div class="nav-layer" onclick="scrollTo('#deliver')">交付</div>
+    <div class="nav-layer" onclick="scrollTo('#scenario')">场景</div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-mesh"></div>
+  <div class="hero-grid"></div>
+
+  <div class="hero-kicker">Enterprise AI · Full Stack Architecture</div>
+  <h1 class="hero-h1"><em>企业智能操作系统</em></h1>
+  <h2 class="hero-h2">AI 全栈工具 · 技术 · 概念体系</h2>
+  <p class="hero-desc">从基础模型到最终交付，系统梳理构建企业级 AI 自动化系统所需的完整技术栈——9 个层级，50+ 核心概念，覆盖从 LLM 到 RPA 的全链路。</p>
+
+  <div class="hero-stats">
+    <div>
+      <div class="stat-num">9</div>
+      <div class="stat-label">架构层级</div>
+    </div>
+    <div>
+      <div class="stat-num">50+</div>
+      <div class="stat-label">核心概念</div>
+    </div>
+    <div>
+      <div class="stat-num">∞</div>
+      <div class="stat-label">组合可能</div>
+    </div>
+  </div>
+
+  <div class="hero-scroll-hint">SCROLL TO EXPLORE</div>
+</div>
+
+<!-- FULL STACK MAP -->
+<div class="fullstack" id="overview">
+  <div class="sec-label fade-up">ARCHITECTURE OVERVIEW</div>
+  <h2 class="sec-title fade-up">全栈架构总览</h2>
+  <p class="sec-sub fade-up">从底层基础设施到上层业务交付，企业 AI 系统由九个层级有机构成。每层都有其专属职责，共同支撑智能化运营。</p>
+
+  <div class="fs-pyramid">
+
+    <div class="fs-layer" style="--layer-c:var(--c-infra)">
+      <div class="fs-layer-label">
+        <div class="fsl-num">L1</div>
+        <div class="fsl-name" style="color:var(--c-infra)">基础层</div>
+        <div class="fsl-en">INFRA</div>
+      </div>
+      <div class="fs-layer-items">
+        <div class="fs-item"><div class="fsi-name">LLM</div><div class="fsi-zh">大语言模型</div></div>
+        <div class="fs-item"><div class="fsi-name">EMBEDDING</div><div class="fsi-zh">向量嵌入</div></div>
+        <div class="fs-item"><div class="fsi-name">VECTOR DB</div><div class="fsi-zh">向量数据库</div></div>
+        <div class="fs-item"><div class="fsi-name">FINE-TUNING</div><div class="fsi-zh">微调训练</div></div>
+        <div class="fs-item"><div class="fsi-name">INFERENCE</div><div class="fsi-zh">推理引擎</div></div>
+      </div>
+    </div>
+
+    <div class="fs-layer" style="--layer-c:var(--c-perceive)">
+      <div class="fs-layer-label">
+        <div class="fsl-num">L2</div>
+        <div class="fsl-name" style="color:var(--c-perceive)">感知层</div>
+        <div class="fsl-en">PERCEIVE</div>
+      </div>
+      <div class="fs-layer-items">
+        <div class="fs-item"><div class="fsi-name">RAG</div><div class="fsi-zh">检索增强生成</div></div>
+        <div class="fs-item"><div class="fsi-name">MULTIMODAL</div><div class="fsi-zh">多模态</div></div>
+        <div class="fs-item"><div class="fsi-name">OCR / VISION</div><div class="fsi-zh">视觉理解</div></div>
+        <div class="fs-item"><div class="fsi-name">DOCUMENT AI</div><div class="fsi-zh">文档解析</div></div>
+        <div class="fs-item"><div class="fsi-name">AUDIO / ASR</div><div class="fsi-zh">语音识别</div></div>
+      </div>
+    </div>
+
+    <div class="fs-layer" style="--layer-c:var(--c-reason)">
+      <div class="fs-layer-label">
+        <div class="fsl-num">L3</div>
+        <div class="fsl-name" style="color:var(--c-reason)">推理层</div>
+        <div class="fsl-en">REASON</div>
+      </div>
+      <div class="fs-layer-items">
+        <div class="fs-item"><div class="fsi-name">AGENT</div><div class="fsi-zh">智能体</div></div>
+        <div class="fs-item"><div class="fsi-name">CoT</div><div class="fsi-zh">链式推理</div></div>
+        <div class="fs-item"><div class="fsi-name">ReAct</div><div class="fsi-zh">推理+行动</div></div>
+        <div class="fs-item"><div class="fsi-name">MEMORY</div><div class="fsi-zh">记忆系统</div></div>
+        <div class="fs-item"><div class="fsi-name">PLANNING</div><div class="fsi-zh">任务规划</div></div>
+      </div>
+    </div>
+
+    <div class="fs-layer" style="--layer-c:var(--c-skill)">
+      <div class="fs-layer-label">
+        <div class="fsl-num">L4</div>
+        <div class="fsl-name" style="color:var(--c-skill)">能力层</div>
+        <div class="fsl-en">SKILLS</div>
+      </div>
+      <div class="fs-layer-items">
+        <div class="fs-item"><div class="fsi-name">SKILLS</div><div class="fsi-zh">技能模块</div></div>
+        <div class="fs-item"><div class="fsi-name">TOOLS</div><div class="fsi-zh">工具调用</div></div>
+        <div class="fs-item"><div class="fsi-name">FUNC CALL</div><div class="fsi-zh">函数调用</div></div>
+        <div class="fs-item"><div class="fsi-name">PROMPT ENG</div><div class="fsi-zh">提示工程</div></div>
+        <div class="fs-item"><div class="fsi-name">CODE INTERP</div><div class="fsi-zh">代码解释器</div></div>
+      </div>
+    </div>
+
+    <div class="fs-layer" style="--layer-c:var(--c-orch)">
+      <div class="fs-layer-label">
+        <div class="fsl-num">L5</div>
+        <div class="fsl-name" style="color:var(--c-orch)">编排层</div>
+        <div class="fsl-en">ORCHESTRATE</div>
+      </div>
+      <div class="fs-layer-items">
+        <div class="fs-item"><div class="fsi-name">WORKFLOW</div><div class="fsi-zh">工作流</div></div>
+        <div class="fs-item"><div class="fsi-name">MULTI-AGENT</div><div class="fsi-zh">多智能体</div></div>
+        <div class="fs-item"><div class="fsi-name">ORCHESTRATOR</div><div class="fsi-zh">任务协调器</div></div>
+        <div class="fs-item"><div class="fsi-name">PIPELINE</div><div class="fsi-zh">处理管道</div></div>
+        <div class="fs-item"><div class="fsi-name">EVENT BUS</div><div class="fsi-zh">事件总线</div></div>
+      </div>
+    </div>
+
+    <div class="fs-layer" style="--layer-c:var(--c-connect)">
+      <div class="fs-layer-label">
+        <div class="fsl-num">L6</div>
+        <div class="fsl-name" style="color:var(--c-connect)">连接层</div>
+        <div class="fsl-en">CONNECT</div>
+      </div>
+      <div class="fs-layer-items">
+        <div class="fs-item"><div class="fsi-name">MCP</div><div class="fsi-zh">模型上下文协议</div></div>
+        <div class="fs-item"><div class="fsi-name">API / REST</div><div class="fsi-zh">接口对接</div></div>
+        <div class="fs-item"><div class="fsi-name">WEBHOOK</div><div class="fsi-zh">事件钩子</div></div>
+        <div class="fs-item"><div class="fsi-name">ETL / ELT</div><div class="fsi-zh">数据集成</div></div>
+        <div class="fs-item"><div class="fsi-name">MESSAGE Q</div><div class="fsi-zh">消息队列</div></div>
+      </div>
+    </div>
+
+    <div class="fs-layer" style="--layer-c:var(--c-exec)">
+      <div class="fs-layer-label">
+        <div class="fsl-num">L7</div>
+        <div class="fsl-name" style="color:var(--c-exec)">执行层</div>
+        <div class="fsl-en">EXECUTE</div>
+      </div>
+      <div class="fs-layer-items">
+        <div class="fs-item"><div class="fsi-name">RPA / ROBOT</div><div class="fsi-zh">流程机器人</div></div>
+        <div class="fs-item"><div class="fsi-name">COMPUTER USE</div><div class="fsi-zh">电脑操控</div></div>
+        <div class="fs-item"><div class="fsi-name">BROWSER AUTO</div><div class="fsi-zh">浏览器自动化</div></div>
+        <div class="fs-item"><div class="fsi-name">SHELL / CLI</div><div class="fsi-zh">命令行执行</div></div>
+      </div>
+    </div>
+
+    <div class="fs-layer" style="--layer-c:var(--c-gov)">
+      <div class="fs-layer-label">
+        <div class="fsl-num">L8</div>
+        <div class="fsl-name" style="color:var(--c-gov)">治理层</div>
+        <div class="fsl-en">GOVERN</div>
+      </div>
+      <div class="fs-layer-items">
+        <div class="fs-item"><div class="fsi-name">GUARDRAILS</div><div class="fsi-zh">安全护栏</div></div>
+        <div class="fs-item"><div class="fsi-name">OBSERVABILITY</div><div class="fsi-zh">可观测性</div></div>
+        <div class="fs-item"><div class="fsi-name">EVALS</div><div class="fsi-zh">评估体系</div></div>
+        <div class="fs-item"><div class="fsi-name">AUDIT LOG</div><div class="fsi-zh">审计日志</div></div>
+        <div class="fs-item"><div class="fsi-name">COST MGMT</div><div class="fsi-zh">成本管控</div></div>
+      </div>
+    </div>
+
+    <div class="fs-layer" style="--layer-c:var(--c-deliver)">
+      <div class="fs-layer-label">
+        <div class="fsl-num">L9</div>
+        <div class="fsl-name" style="color:var(--c-deliver)">交付层</div>
+        <div class="fsl-en">DELIVER</div>
+      </div>
+      <div class="fs-layer-items">
+        <div class="fs-item"><div class="fsi-name">AI COPILOT</div><div class="fsi-zh">智能副驾</div></div>
+        <div class="fs-item"><div class="fsi-name">CHATBOT</div><div class="fsi-zh">对话机器人</div></div>
+        <div class="fs-item"><div class="fsi-name">AI GATEWAY</div><div class="fsi-zh">AI 网关</div></div>
+        <div class="fs-item"><div class="fsi-name">KNOWLEDGE BASE</div><div class="fsi-zh">企业知识库</div></div>
+        <div class="fs-item"><div class="fsi-name">DASHBOARD</div><div class="fsi-zh">智能驾驶舱</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ─────────── LAYER 1: INFRA ─────────── -->
+<div class="detail-section" id="infra" style="--layer-color:var(--c-infra)">
+  <div class="detail-header fade-up">
+    <div class="dh-left">
+      <div class="layer-badge"><div class="badge-dot"></div>L1 · INFRASTRUCTURE</div>
+      <h2 class="detail-title">基础层：<span>模型与存储</span></h2>
+      <p class="detail-desc">一切 AI 能力的地基。大语言模型提供智能核心，向量数据库实现语义检索，推理引擎控制速度与成本——这层的选择决定了整个系统的天花板。</p>
+    </div>
+  </div>
+
+  <div class="concepts-grid">
+    <div class="c-card">
+      <div class="c-card-icon">🧠</div>
+      <div class="c-card-name">LLM</div>
+      <div class="c-card-zh">大语言模型</div>
+      <div class="c-card-desc">整个系统的智能核心。GPT-4、Claude、Gemini 等模型通过海量文本训练，具备语言理解、推理、生成能力。企业选型需权衡：能力、成本、数据安全、延迟。</div>
+      <div class="c-card-tags"><span class="c-tag">OpenAI</span><span class="c-tag">Claude</span><span class="c-tag">Gemini</span><span class="c-tag">Llama</span></div>
+    </div>
+    <div class="c-card">
+      <div class="c-card-icon">🔢</div>
+      <div class="c-card-name">EMBEDDING</div>
+      <div class="c-card-zh">向量嵌入</div>
+      <div class="c-card-desc">将文本、图片、音频转换为高维向量数字表示，使计算机能计算语义相似度。"苹果手机"和"iPhone"会被嵌入为接近的向量，是 RAG 和语义搜索的基础。</div>
+      <div class="c-card-tags"><span class="c-tag">text-embedding-3</span><span class="c-tag">sentence-transformers</span></div>
+    </div>
+    <div class="c-card">
+      <div class="c-card-icon">🗃️</div>
+      <div class="c-card-name">VECTOR DATABASE</div>
+      <div class="c-card-zh">向量数据库</div>
+      <div class="c-card-desc">专为存储和检索向量而设计的数据库。能在毫秒内从千万文档中找到语义最相近的内容，是企业知识库的核心存储引擎。</div>
+      <div class="c-card-tags"><span class="c-tag">Pinecone</span><span class="c-tag">Weaviate</span><span class="c-tag">Chroma</span><span class="c-tag">Qdrant</span></div>
+    </div>
+    <div class="c-card">
+      <div class="c-card-icon">🎯</div>
+      <div class="c-card-name">FINE-TUNING</div>
+      <div class="c-card-zh">微调训练</div>
+      <div class="c-card-desc">在通用模型基础上，用企业私有数据继续训练，使模型学会行业术语、企业风格、专业知识。让"通才"变成你的行业"专才"。</div>
+      <div class="c-card-tags"><span class="c-tag">LoRA</span><span class="c-tag">QLoRA</span><span class="c-tag">RLHF</span></div>
+    </div>
+    <div class="c-card">
+      <div class="c-card-icon">⚡</div>
+      <div class="c-card-name">INFERENCE ENGINE</div>
+      <div class="c-card-zh">推理引擎</div>
+      <div class="c-card-desc">控制模型运行效率的底层引擎。通过量化、批处理、缓存等技术将推理速度提升数倍，同时大幅降低成本。生产环境中不可忽视的关键组件。</div>
+      <div class="c-card-tags"><span class="c-tag">vLLM</span><span class="c-tag">TGI</span><span class="c-tag">TensorRT</span></div>
+    </div>
+    <div class="c-card">
+      <div class="c-card-icon">💾</div>
+      <div class="c-card-name">CONTEXT WINDOW</div>
+      <div class="c-card-zh">上下文窗口</div>
+      <div class="c-card-desc">模型单次能处理的最大文本量（token 数）。决定了能喂给模型多少上下文信息，直接影响长文档处理、多轮对话、复杂任务执行的能力边界。</div>
+      <div class="c-card-tags"><span class="c-tag">128K tokens</span><span class="c-tag">200K tokens</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────── LAYER 2: PERCEIVE ─────────── -->
+<div class="detail-section" id="perceive" style="--layer-color:var(--c-perceive)">
+  <div class="detail-header fade-up">
+    <div class="dh-left">
+      <div class="layer-badge"><div class="badge-dot"></div>L2 · PERCEPTION</div>
+      <h2 class="detail-title">感知层：<span>读懂世界</span></h2>
+      <p class="detail-desc">让 AI 从"只能看文字"升级为能理解文档、图片、语音等多元信息。RAG 解决知识时效问题，多模态打破单一输入限制，Document AI 让非结构化数据可用。</p>
+    </div>
+  </div>
+
+  <div class="concepts-grid">
+    <div class="c-card">
+      <div class="c-card-icon">🔍</div>
+      <div class="c-card-name">RAG</div>
+      <div class="c-card-zh">检索增强生成</div>
+      <div class="c-card-desc">Retrieval-Augmented Generation。回答问题时先检索相关文档，再将文档内容注入提示词让模型作答。解决模型"知识过时"和"幻觉"两大核心问题，是企业知识库的标配方案。</div>
+      <div class="c-card-tags"><span class="c-tag">语义检索</span><span class="c-tag">知识增强</span><span class="c-tag">私域数据</span></div>
+    </div>
+    <div class="c-card">
+      <div class="c-card-icon">🌈</div>
+      <div class="c-card-name">MULTIMODAL</div>
+      <div class="c-card-zh">多模态</div>
+      <div class="c-card-desc">同时处理文本、图片、音频、视频等多种类型输入的能力。上传一张产品图片就能分析质量问题，发送语音就能生成文字摘要——让交互更自然。</div>
+      <div class="c-card-tags"><span class="c-tag">Vision</span><span class="c-tag">Audio</span><span class="c-tag">Video</span></div>
+    </div>
+    <div class="c-card">
+      <div class="c-card-icon">👁️</div>
+      <div class="c-card-name">OCR / VISION</div>
+      <div class="c-card-zh">视觉理解</div>
+      <div class="c-card-desc">从图片和扫描件中提取文字，理解图表、表格、手写内容。结合 AI 不只是识别字符，还能理解图片语义——看到产品缺陷图就能输出质检报告。</div>
+      <div class="c-card-tags"><span class="c-tag">Document OCR</span><span class="c-tag">Table Parsing</span></div>
+    </div>
+    <div class="c-card">
+      <div class="c-card-icon">📋</div>
+      <div class="c-card-name">DOCUMENT AI</div>
+      <div class="c-card-zh">文档智能</div>
+      <div class="c-card-desc">专门处理 PDF、Word、Excel、合同、发票等非结构化文档的 AI 能力。自动提取关键字段、识别文档类型、理解布局结构，将文档转化为可操作的结构化数据。</div>
+      <div class="c-card-tags"><span class="c-tag">合同解析</span><span class="c-tag">发票识别</span><span class="c-tag">表单提取</span></div>
+    </div>
+    <div class="c-card">
+      <div class="c-card-icon">🎤</div>
+      <div class="c-card-name">ASR / TTS</div>
+      <div class="c-card-zh">语音识别与合成</div>
+      <div class="c-card-desc">ASR（自动语音识别）将语音转文字，TTS（文字转语音）将文本朗读。赋予 AI 系统"耳朵"和"嘴巴"，支撑语音客服、会议纪要、语音指令等场景。</div>
+      <div class="c-card-tags"><span class="c-tag">Whisper</span><span class="c-tag">Azure Speech</span></div>
+    </div>
+    <div class="c-card">
+      <div class="c-card-icon">🗂️</div>
+      <div class="c-card-name">CHUNKING STRATEGY</div>
+      <div class="c-card-zh">文档分块策略</div>
+      <div class="c-card-desc">将长文档切割成适合检索的小块的策略。切太大信息冗余，切太小缺乏上下文。语义分块、递归分块、滑动窗口等策略直接影响 RAG 检索质量。</div>
+      <div class="c-card-tags"><span class="c-tag">语义分块</span><span class="c-tag">滑动窗口</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────── LAYER 3: REASON ─────────── -->
+<div class="detail-section" id="reason" style="--layer-color:var(--c-reason)">
+  <div class="detail-header fade-up">
+    <div class="dh-left">
+      <div class="layer-badge"><div class="badge-dot"></div>L3 · REASONING</div>
+      <h2 class="detail-title">推理层：<span>思考与决策</span></h2>
+      <p class="detail-desc">AI 不只是"查字典"，更要能思考、规划、决策。这一层定义了 AI 如何处理复杂问题——从单步问答，到多步规划，到自主完成开放性任务。</p>
+    </div>
+  </div>
+
+  <div class="concepts-grid">
+    <div class="c-card">
+      <div class="c-card-icon">🤖</div>
+      <div class="c-card-name">AGENT</div>
+      <div class="c-card-zh">智能体</div>
+      <div class="c-card-desc">能自主感知目标、制定计划、调用工具、执行多步骤任务的 AI 系统。区别于简单问答——Agent 会主动"做事"，遇到问题会自动调整策略，直到目标完成。</div>
+      <div class="c-card-tags"><span class="c-tag">自主决策</span><span class="c-tag">工具调用</span><span class="c-tag">循环执行</span></div>
+    </div>
+    <div class="c-card">
+      <div class="c-card-icon">💭</div>
+      <div class="c-card-name">CHAIN OF THOUGHT</div>
+      <div class="c-card-zh">链式推理 (CoT)</div>
+      <div class="c-card-desc">让模型在给出答案前"把思考过程写出来"的技术。显著提升复杂问题的准确率——就像人类解数学题时打草稿，逐步推导比直接猜答案准确得多。</div>
+      <div class="c-card-tags"><span class="c-tag">逐步推导</span><span class="c-tag">思维链</span></div>
+    </div>
+    <div class="c-card">
+      <div class="c-card-icon">⚛️</div>
+      <div class="c-card-name">ReAct</div>
+      <div class="c-card-zh">推理 + 行动</div>
+      <div class="c-card-desc">Reasoning + Acting。让 AI 交替进行"思考"和"行动"：想→查→看结果→再想→再查。比纯推理更准确，比纯执行更灵活，是 Agent 设计的核心范式。</div>
+      <div class="c-card-tags"><span class="c-tag">Thought</span><span class="c-tag">Action</span><span class="c-tag">Observation</span></div>
+    </div>
+    <div class="c-card">
+      <div class="c-card-icon">🧩</div>
+      <div class="c-card-name">MEMORY SYSTEM</div>
+      <div class="c-card-zh">记忆系统</div>
+      <div class="c-card-desc">AI 的记忆分四种：短期记忆（对话历史）、长期记忆（向量存储）、情节记忆（过去经历）、程序记忆（固化技能）。记忆架构决定了 AI 能否"越用越聪明"。</div>
+      <div class="c-card-tags"><span class="c-tag">短期记忆</span><span class="c-tag">长期记忆</span><span class="c-tag">情节记忆</span></div>
+    </div>
+    <div class="c-card">
+      <div class="c-card-icon">🗺️</div>
+      <div class="c-card-name">TASK PLANNING</div>
+      <div class="c-card-zh">任务规划</div>
+      <div class="c-card-desc">将复杂目标分解成有序子任务序列的能力。包括任务依赖分析、优先级排序、资源分配。好的规划能让 Agent 高效并行执行而不乱套。</div>
+      <div class="c-card-tags"><span class="c-tag">任务分解</span><span class="c-tag">依赖图</span><span class="c-tag">并行执行</span></div>
+    </div>
+    <div class="c-card">
+      <div class="c-card-icon">🌳</div>
+      <div class="c-card-name">TREE OF THOUGHTS</div>
+      <div class="c-card-zh">思维树 (ToT)</div>
+      <div class="c-card-desc">让 AI 探索多条推理路径，像棋手分析多步棋一样。对于有多种解法的复杂问题，ToT 能找到最优路径，避免单线推理陷入死胡同。</div>
+      <div class="c-card-tags"><span class="c-tag">多路径探索</span><span class="c-tag">剪枝搜索</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────── LAYER 4: SKILLS ─────────── -->
+<div class="detail-section" id="skill" style="--layer-color:var(--c-skill)">
+  <div class="detail-header fade-up">
+    <div class="dh-left">
+      <div class="layer-badge"><div class="badge-dot"></div>L4 · CAPABILITIES</div>
+      <h2 class="detail-title">能力层：<span>工具与技能</span></h2>
+      <p class="detail-desc">赋予 AI 具体行动能力的工具箱。Function Calling 让 AI 调用 API，Code Interpreter 让 AI 跑代码，Skills 封装最佳实践——从"能想"到"能做"的关键桥梁。</p>
+    </div>
+  </div>
+
+  <div class="concepts-grid">
+    <div class="c-card">
+      <div class="c-card-icon">⚡</div>
+      <div class="c-card-name">SKILLS</div>
+      <div class="c-card-zh">技能模块</div>
+      <div class="c-card-desc">封装特定任务最佳实践的可复用能力包。当 AI 遇到"生成 PPT"任务时，自动加载 PPTX Skill，按照预定义的高质量模板和流程执行，而非每次从零摸索。</div>
+      <div class="c-card-tags"><span class="c-tag">可复用</span><span class="c-tag">可组合</span><span class="c-tag">领域专精</span></div>
+    </div>
+    <div class="c-card">
+      <div class="c-card-icon">🔧</div>
+      <div class="c-card-name">FUNCTION CALLING</div>
+      <div class="c-card-zh">函数调用</div>
+      <div class="c-card-desc">AI 识别用户意图后，自动选择并调用预定义函数（API）的能力。模型决定"调用什么函数、传什么参数"，系统负责真正执行——AI 与外部世界交互的标准接口。</div>
+      <div class="c-card-tags"><span class="c-tag">结构化输出</span><span class="c-tag">API 桥接</span></div>
+    </div>
+    <div class="c-card">
+      <div class="c-card-icon">💻</div>
+      <div class="c-card-name">CODE INTERPRETER</div>
+      <div class="c-card-zh">代码解释器</div>
+      <div class="c-card-desc">让 AI 在沙箱环境中编写并运行代码，处理数据分析、图表生成、文件转换等任务。AI 能根据运行结果自动调试，直到得出正确输出。</div>
+      <div class="c-card-tags"><span class="c-tag">Python</span><span class="c-tag">数据分析</span><span class="c-tag">沙箱执行</span></div>
+    </div>
+    <div class="c-card">
+      <div class="c-card-icon">✍️</div>
+      <div class="c-card-name">PROMPT ENGINEERING</div>
+      <div class="c-card-zh">提示词工程</div>
+      <div class="c-card-desc">系统性设计输入提示词以最大化模型输出质量的学科。包括角色设定、少样本示例、思维链引导、输出格式约束等技术——同样的模型，提示词好坏可使结果天壤之别。</div>
+      <div class="c-card-tags"><span class="c-tag">System Prompt</span><span class="c-tag">Few-shot</span><span class="c-tag">CoT</span></div>
+    </div>
+    <div class="c-card">
+      <div class="c-card-icon">🎭</div>
+      <div class="c-card-name">STRUCTURED OUTPUT</div>
+      <div class="c-card-zh">结构化输出</div>
+      <div class="c-card-desc">强制模型按照预定义的 JSON Schema 或格式输出，而非自由文本。确保下游系统能可靠地解析 AI 输出，是生产级 AI 集成的必要条件。</div>
+      <div class="c-card-tags"><span class="c-tag">JSON Schema</span><span class="c-tag">强类型</span></div>
+    </div>
+    <div class="c-card">
+      <div class="c-card-icon">🔄</div>
+      <div class="c-card-name">TOOL USE</div>
+      <div class="c-card-zh">工具调用</div>
+      <div class="c-card-desc">赋予 AI 访问外部工具的能力：搜索引擎、计算器、日历、数据库查询等。每个"工具"都是 AI 能力的延伸，工具集的丰富程度决定了 AI 的行动半径。</div>
+      <div class="c-card-tags"><span class="c-tag">Web Search</span><span class="c-tag">Calculator</span><span class="c-tag">DB Query</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────── LAYER 5: ORCHESTRATE ─────────── -->
+<div class="detail-section" id="orch" style="--layer-color:var(--c-orch)">
+  <div class="detail-header fade-up">
+    <div class="dh-left">
+      <div class="layer-badge"><div class="badge-dot"></div>L5 · ORCHESTRATION</div>
+      <h2 class="detail-title">编排层：<span>协调全局</span></h2>
+      <p class="detail-desc">当单个 Agent 不够用时，需要编排层来协调多个 Agent 和工具协同工作。Workflow 定义蓝图，Orchestrator 统筹调度，Multi-Agent 分工协作——企业级复杂任务的指挥中枢。</p>
+    </div>
+  </div>
+
+  <div class="concepts-grid">
+    <div class="c-card">
+      <div class="c-card-icon">🔄</div>
+      <div class="c-card-name">WORKFLOW</div>
+      <div class="c-card-zh">工作流</div>
+      <div class="c-card-desc">将多个步骤、判断、工具调用串联成有序流程的蓝图。定义触发条件、执行顺序、分支逻辑和错误处理。从邮件自动分类到报告自动生成，都由 Workflow 来编排。</div>
+      <div class="c-card-tags"><span class="c-tag">DAG</span><span class="c-tag">条件分支</span><span class="c-tag">并行执行</span></div>
+    </div>
+    <div class="c-card">
+      <div class="c-card-icon">🏛️</div>
+      <div class="c-card-name">MULTI-AGENT</div>
+      <div class="c-card-zh">多智能体协作</div>
+      <div class="c-card-desc">多个专业化 Agent 分工协作完成复杂任务。如"研究 Agent"负责搜集信息，"分析 Agent"负责数据处理，"写作 Agent"负责生成报告——各司其职，合力完成单 Agent 无法胜任的任务。</div>
+      <div class="c-card-tags"><span class="c-tag">分工协作</span><span class="c-tag">专业化</span><span class="c-tag">并行</span></div>
+    </div>
+    <div class="c-card">
+      <div class="c-card-icon">🎛️</div>
+      <div class="c-card-name">ORCHESTRATOR</div>
+      <div class="c-card-zh">任务协调器</div>
+      <div class="c-card-desc">多 Agent 系统的"项目经理"。负责分配任务、监控进度、处理失败、整合结果。好的 Orchestrator 让复杂任务执行有条不紊，如同一支训练有素的团队。</div>
+      <div class="c-card-tags"><span class="c-tag">LangGraph</span><span class="c-tag">CrewAI</span><span class="c-tag">AutoGen</span></div>
+    </div>
+    <div class="c-card">
+      <div class="c-card-icon">🔁</div>
+      <div class="c-card-name">PIPELINE</div>
+      <div class="c-card-zh">处理管道</div>
+      <div class="c-card-desc">数据或任务按序流经一系列处理节点的架构模式。每个节点做一件事并将结果传给下一节点。数据预处理→AI 推理→后处理→输出，构成完整的 AI 处理流水线。</div>
+      <div class="c-card-tags"><span class="c-tag">流式处理</span><span class="c-tag">批处理</span></div>
+    </div>
+    <div class="c-card">
+      <div class="c-card-icon">📡</div>
+      <div class="c-card-name">EVENT BUS</div>
+      <div class="c-card-zh">事件总线</div>
+      <div class="c-card-desc">系统间异步通信的中枢。当某事件发生（如新订单、用户投诉），事件总线将消息广播给所有订阅方，触发相应的 AI 工作流。实现系统解耦与实时响应。</div>
+      <div class="c-card-tags"><span class="c-tag">Kafka</span><span class="c-tag">Redis Pub/Sub</span></div>
+    </div>
+    <div class="c-card">
+      <div class="c-card-icon">🔃</div>
+      <div class="c-card-name">FEEDBACK LOOP</div>
+      <div class="c-card-zh">反馈循环</div>
+      <div class="c-card-desc">AI 执行结果反馈回系统，用于评估质量、调整策略、优化模型的闭环机制。没有反馈循环的系统只能"用一次"，有反馈的系统才能"越用越好"。</div>
+      <div class="c-card-tags"><span class="c-tag">RLHF</span><span class="c-tag">持续优化</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────── LAYER 6: CONNECT ─────────── -->
+<div class="detail-section" id="connect" style="--layer-color:var(--c-connect)">
+  <div class="detail-header fade-up">
+    <div class="dh-left">
+      <div class="layer-badge"><div class="badge-dot"></div>L6 · CONNECTIVITY</div>
+      <h2 class="detail-title">连接层：<span>打通数据孤岛</span></h2>
+      <p class="detail-desc">AI 系统的价值在于能访问并操作真实数据。MCP 提供标准化接口，API 对接现有系统，ETL 整合历史数据，Webhook 实现实时触发——让 AI 真正融入企业数字生态。</p>
+    </div>
+  </div>
+
+  <div class="concepts-grid">
+    <div class="c-card">
+      <div class="c-card-icon">🔌</div>
+      <div class="c-card-name">MCP</div>
+      <div class="c-card-zh">模型上下文协议</div>
+      <div class="c-card-desc">Anthropic 推出的开放标准协议（2024）。统一了 AI 模型与外部工具/数据源的交互方式，就像 USB 接口一样——有了 MCP，一套代码可接入数百种工具，无需为每个工具单独开发集成。</div>
+      <div class="c-card-tags"><span class="c-tag">开放协议</span><span class="c-tag">双向通信</span><span class="c-tag">生态标准</span></div>
+    </div>
+    <div class="c-card">
+      <div class="c-card-icon">🌐</div>
+      <div class="c-card-name">API / REST / GraphQL</div>
+      <div class="c-card-zh">接口对接</div>
+      <div class="c-card-desc">通过标准化接口与企业现有系统集成：ERP、CRM、数据库、SaaS 工具等。AI 读取数据、写入结果、触发业务流程——无需改造现有系统，即可注入 AI 能力。</div>
+      <div class="c-card-tags"><span class="c-tag">REST</span><span class="c-tag">GraphQL</span><span class="c-tag">gRPC</span></div>
+    </div>
+    <div class="c-card">
+      <div class="c-card-icon">🪝</div>
+      <div class="c-card-name">WEBHOOK</div>
+      <div class="c-card-zh">事件钩子</div>
+      <div class="c-card-desc">当特定事件发生时，系统主动推送通知到指定地址。与轮询相反——不是 AI 不停"问有没有新数据"，而是数据变化时系统主动"告诉"AI，实现实时、高效的事件驱动。</div>
+      <div class="c-card-tags"><span class="c-tag">事件驱动</span><span class="c-tag">实时触发</span></div>
+    </div>
+    <div class="c-card">
+      <div class="c-card-icon">🔀</div>
+      <div class="c-card-name">ETL / ELT</div>
+      <div class="c-card-zh">数据集成管道</div>
+      <div class="c-card-desc">Extract-Transform-Load。将分散在各业务系统的数据抽取、清洗、转换后导入统一数据湖，为 AI 提供可靠的数据燃料。数据质量是 AI 输出质量的先决条件。</div>
+      <div class="c-card-tags"><span class="c-tag">Airbyte</span><span class="c-tag">dbt</span><span class="c-tag">Fivetran</span></div>
+    </div>
+    <div class="c-card">
+      <div class="c-card-icon">📨</div>
+      <div class="c-card-name">MESSAGE QUEUE</div>
+      <div class="c-card-zh">消息队列</div>
+      <div class="c-card-desc">异步消息传递的缓冲层。AI 任务提交到队列，由工作节点异步处理，避免高峰期系统崩溃。同时提供任务持久化、重试机制，确保不丢失任何请求。</div>
+      <div class="c-card-tags"><span class="c-tag">Kafka</span><span class="c-tag">RabbitMQ</span><span class="c-tag">SQS</span></div>
+    </div>
+    <div class="c-card">
+      <div class="c-card-icon">🔐</div>
+      <div class="c-card-name">AUTH / IAM</div>
+      <div class="c-card-zh">身份与权限管理</div>
+      <div class="c-card-desc">控制 AI 系统能访问什么数据、能执行什么操作的权限框架。AI Agent 需要精细的权限边界——能读销售数据但不能删除，能发邮件但不能转账。最小权限原则是安全基石。</div>
+      <div class="c-card-tags"><span class="c-tag">OAuth</span><span class="c-tag">RBAC</span><span class="c-tag">最小权限</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────── LAYER 7: EXECUTE ─────────── -->
+<div class="detail-section" id="exec" style="--layer-color:var(--c-exec)">
+  <div class="detail-header fade-up">
+    <div class="dh-left">
+      <div class="layer-badge"><div class="badge-dot"></div>L7 · EXECUTION</div>
+      <h2 class="detail-title">执行层：<span>真实世界操控</span></h2>
+      <p class="detail-desc">AI 最终需要在真实环境中行动——点击按钮、填写表单、操作软件、运行脚本。这一层是 AI 与物理世界的接触面，决定了自动化能触达多深的业务操作。</p>
+    </div>
+  </div>
+
+  <div class="concepts-grid">
+    <div class="c-card">
+      <div class="c-card-icon">🦾</div>
+      <div class="c-card-name">RPA / ROBOT</div>
+      <div class="c-card-zh">流程自动化机器人</div>
+      <div class="c-card-desc">模拟人类操作计算机界面的技术：移动鼠标、点击按钮、输入文字、截图。无需 API 即可操作任何软件，是处理遗留系统（Legacy）的利器。结合 AI 后能理解上下文、灵活应变。</div>
+      <div class="c-card-tags"><span class="c-tag">UiPath</span><span class="c-tag">Automation Anywhere</span></div>
+    </div>
+    <div class="c-card">
+      <div class="c-card-icon">🖥️</div>
+      <div class="c-card-name">COMPUTER USE</div>
+      <div class="c-card-zh">电脑操控</div>
+      <div class="c-card-desc">新一代 AI 原生的电脑操控能力（如 Claude's Computer Use）。AI 通过截图理解屏幕内容，自主决定下一步操作——不依赖预录制脚本，能处理动态变化的界面。</div>
+      <div class="c-card-tags"><span class="c-tag">Claude CU</span><span class="c-tag">视觉定位</span><span class="c-tag">自适应</span></div>
+    </div>
+    <div class="c-card">
+      <div class="c-card-icon">🌐</div>
+      <div class="c-card-name">BROWSER AUTOMATION</div>
+      <div class="c-card-zh">浏览器自动化</div>
+      <div class="c-card-desc">控制浏览器自动执行网页操作：登录、填表、抓取数据、点击、滚动。比 RPA 更专注于 Web，可精确控制 DOM 元素，是 Web 数据采集和网页操作的首选。</div>
+      <div class="c-card-tags"><span class="c-tag">Playwright</span><span class="c-tag">Puppeteer</span><span class="c-tag">Selenium</span></div>
+    </div>
+    <div class="c-card">
+      <div class="c-card-icon">⌨️</div>
+      <div class="c-card-name">SHELL / CLI EXEC</div>
+      <div class="c-card-zh">命令行执行</div>
+      <div class="c-card-desc">AI 在服务器上执行 Shell 命令：文件操作、进程管理、系统配置、脚本运行。让 AI 成为真正的 DevOps 助手，能自动化运维任务、处理服务器突发情况。</div>
+      <div class="c-card-tags"><span class="c-tag">Bash</span><span class="c-tag">Python</span><span class="c-tag">DevOps</span></div>
+    </div>
+    <div class="c-card">
+      <div class="c-card-icon">📱</div>
+      <div class="c-card-name">MOBILE AUTOMATION</div>
+      <div class="c-card-zh">移动端自动化</div>
+      <div class="c-card-desc">在手机 App 上执行自动化操作：点击、滑动、输入。适用于没有开放 API 的移动应用，可实现移动端业务流程的 AI 自动化。</div>
+      <div class="c-card-tags"><span class="c-tag">Appium</span><span class="c-tag">iOS/Android</span></div>
+    </div>
+    <div class="c-card">
+      <div class="c-card-icon">📦</div>
+      <div class="c-card-name">SANDBOX / CONTAINER</div>
+      <div class="c-card-zh">沙箱与容器</div>
+      <div class="c-card-desc">为 AI 提供安全隔离的执行环境。AI 运行代码、操作文件、访问网络都限制在沙箱内，防止意外影响生产系统。Docker 容器化让每次执行都在干净、可复现的环境中进行。</div>
+      <div class="c-card-tags"><span class="c-tag">Docker</span><span class="c-tag">E2B</span><span class="c-tag">安全隔离</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────── LAYER 8: GOVERN ─────────── -->
+<div class="detail-section" id="gov" style="--layer-color:var(--c-gov)">
+  <div class="detail-header fade-up">
+    <div class="dh-left">
+      <div class="layer-badge"><div class="badge-dot"></div>L8 · GOVERNANCE</div>
+      <h2 class="detail-title">治理层：<span>安全与可控</span></h2>
+      <p class="detail-desc">生产级 AI 系统必须可信赖、可观测、可审计。Guardrails 防止 AI 越界，Observability 让系统透明可查，Evals 持续验证质量——没有治理层的 AI 是不敢上线的 AI。</p>
+    </div>
+  </div>
+
+  <div class="concepts-grid">
+    <div class="c-card">
+      <div class="c-card-icon">🛡️</div>
+      <div class="c-card-name">GUARDRAILS</div>
+      <div class="c-card-zh">安全护栏</div>
+      <div class="c-card-desc">约束 AI 行为边界的安全机制：过滤有害输出、阻止越权操作、检测 Prompt 注入攻击。企业部署 AI 必须设置护栏——就像电梯有超重保护，AI 也需要安全兜底。</div>
+      <div class="c-card-tags"><span class="c-tag">内容过滤</span><span class="c-tag">Prompt 防注入</span><span class="c-tag">输出审核</span></div>
+    </div>
+    <div class="c-card">
+      <div class="c-card-icon">📊</div>
+      <div class="c-card-name">OBSERVABILITY</div>
+      <div class="c-card-zh">可观测性</div>
+      <div class="c-card-desc">对 AI 系统运行状态的全面监控：每次调用的延迟、Token 消耗、错误率、用户满意度。没有可观测性，AI 系统如同黑盒，出了问题无从排查、无法优化。</div>
+      <div class="c-card-tags"><span class="c-tag">LangSmith</span><span class="c-tag">Helicone</span><span class="c-tag">Tracing</span></div>
+    </div>
+    <div class="c-card">
+      <div class="c-card-icon">🧪</div>
+      <div class="c-card-name">EVALS</div>
+      <div class="c-card-zh">评估体系</div>
+      <div class="c-card-desc">系统性衡量 AI 输出质量的方法论。包括：自动化评估（准确率、F1 分数）、人工评估、LLM-as-Judge（用 AI 评估 AI）。没有评估，就不知道系统在变好还是变坏。</div>
+      <div class="c-card-tags"><span class="c-tag">自动评估</span><span class="c-tag">LLM-Judge</span><span class="c-tag">A/B测试</span></div>
+    </div>
+    <div class="c-card">
+      <div class="c-card-icon">📝</div>
+      <div class="c-card-name">AUDIT LOG</div>
+      <div class="c-card-zh">审计日志</div>
+      <div class="c-card-desc">完整记录 AI 系统每一次操作的时间、内容、结果和执行者。满足合规要求，支持事后溯源——出现纠纷时能精确还原"AI 当时做了什么、为什么这么做"。</div>
+      <div class="c-card-tags"><span class="c-tag">合规</span><span class="c-tag">可溯源</span><span class="c-tag">不可篡改</span></div>
+    </div>
+    <div class="c-card">
+      <div class="c-card-icon">💰</div>
+      <div class="c-card-name">COST MANAGEMENT</div>
+      <div class="c-card-zh">成本管控</div>
+      <div class="c-card-desc">AI Token 消耗即成本，大规模使用时费用可能急剧上升。成本管控包括：Token 预算限制、模型路由（简单任务用便宜模型）、缓存复用、批处理优化。</div>
+      <div class="c-card-tags"><span class="c-tag">Token 预算</span><span class="c-tag">模型路由</span><span class="c-tag">缓存</span></div>
+    </div>
+    <div class="c-card">
+      <div class="c-card-icon">🔒</div>
+      <div class="c-card-name">DATA PRIVACY</div>
+      <div class="c-card-zh">数据隐私保护</div>
+      <div class="c-card-desc">确保敏感数据不泄露给外部模型的机制：PII 脱敏、私有化部署、数据分级管理。企业数据是核心资产，AI 系统必须在隐私合规框架内运行。</div>
+      <div class="c-card-tags"><span class="c-tag">GDPR</span><span class="c-tag">PII脱敏</span><span class="c-tag">私有化部署</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────── LAYER 9: DELIVER ─────────── -->
+<div class="detail-section" id="deliver" style="--layer-color:var(--c-deliver)">
+  <div class="detail-header fade-up">
+    <div class="dh-left">
+      <div class="layer-badge"><div class="badge-dot"></div>L9 · DELIVERY</div>
+      <h2 class="detail-title">交付层：<span>触达用户</span></h2>
+      <p class="detail-desc">AI 能力最终必须以用户友好的形式呈现。Copilot 嵌入工作流，Chatbot 提供对话入口，AI Gateway 统一管理 API，知识库沉淀企业智慧——这层决定了 AI 如何被真正用起来。</p>
+    </div>
+  </div>
+
+  <div class="concepts-grid">
+    <div class="c-card">
+      <div class="c-card-icon">🧑‍✈️</div>
+      <div class="c-card-name">AI COPILOT</div>
+      <div class="c-card-zh">智能副驾</div>
+      <div class="c-card-desc">嵌入到现有工作界面的 AI 助手，在用户工作时实时辅助：写文档时提供建议、写代码时补全、分析数据时给出洞察。不替代用户决策，而是让每个员工都有专属 AI 助理。</div>
+      <div class="c-card-tags"><span class="c-tag">GitHub Copilot</span><span class="c-tag">M365 Copilot</span></div>
+    </div>
+    <div class="c-card">
+      <div class="c-card-icon">💬</div>
+      <div class="c-card-name">CHATBOT / ASSISTANT</div>
+      <div class="c-card-zh">对话机器人</div>
+      <div class="c-card-desc">通过自然语言对话提供服务的 AI 入口。从简单 FAQ 机器人到能处理复杂业务的智能助手，覆盖客服、HR、IT 支持等场景。好的 Chatbot 能无缝转接人工，保证体验。</div>
+      <div class="c-card-tags"><span class="c-tag">多轮对话</span><span class="c-tag">意图识别</span><span class="c-tag">人工兜底</span></div>
+    </div>
+    <div class="c-card">
+      <div class="c-card-icon">🚪</div>
+      <div class="c-card-name">AI GATEWAY</div>
+      <div class="c-card-zh">AI 网关</div>
+      <div class="c-card-desc">统一管理企业所有 AI 调用的中间层：路由到不同模型、统一认证、限流、缓存、日志。让企业像管理网络流量一样管理 AI 调用，避免各团队各自为政造成混乱。</div>
+      <div class="c-card-tags"><span class="c-tag">模型路由</span><span class="c-tag">统一认证</span><span class="c-tag">限流缓存</span></div>
+    </div>
+    <div class="c-card">
+      <div class="c-card-icon">📚</div>
+      <div class="c-card-name">KNOWLEDGE BASE</div>
+      <div class="c-card-zh">企业知识库</div>
+      <div class="c-card-desc">将企业文档、政策、产品手册、历史案例结构化存储，通过 RAG 让 AI 能准确检索回答。让 AI 成为真正懂公司的"老员工"，而非只有通用知识的外行。</div>
+      <div class="c-card-tags"><span class="c-tag">RAG 驱动</span><span class="c-tag">持续更新</span><span class="c-tag">权限分级</span></div>
+    </div>
+    <div class="c-card">
+      <div class="c-card-icon">📈</div>
+      <div class="c-card-name">AI DASHBOARD</div>
+      <div class="c-card-zh">智能驾驶舱</div>
+      <div class="c-card-desc">将 AI 系统运行数据可视化：使用量、质量评分、成本分析、任务完成率。管理层通过驾驶舱了解 AI 投资回报，运营团队借此持续优化——让 AI 决策有数据支撑。</div>
+      <div class="c-card-tags"><span class="c-tag">实时监控</span><span class="c-tag">ROI分析</span></div>
+    </div>
+    <div class="c-card">
+      <div class="c-card-icon">🏪</div>
+      <div class="c-card-name">AI APP STORE</div>
+      <div class="c-card-zh">AI 应用市场</div>
+      <div class="c-card-desc">企业内部的 AI 能力分发平台。各部门按需启用所需 AI 应用，标准化部署和权限管理，形成内部 AI 生态——从"一次建设"到"全员共享"的规模化路径。</div>
+      <div class="c-card-tags"><span class="c-tag">内部平台</span><span class="c-tag">规模化</span><span class="c-tag">自助使用</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────── SCENARIOS ─────────── -->
+<div class="scenario-section" id="scenario">
+  <div class="sec-label fade-up">INTEGRATION SCENARIOS</div>
+  <h2 class="sec-title fade-up">全栈协同场景演示</h2>
+  <p class="sec-sub fade-up">真实企业场景中，九层架构如何联动？选择以下场景查看完整链路。</p>
+
+  <div class="scenario-board fade-up">
+    <div class="scenario-tabs">
+      <div class="s-tab active" onclick="switchTab(0)">📦 供应链异常处理</div>
+      <div class="s-tab" onclick="switchTab(1)">📄 合同智能审查</div>
+      <div class="s-tab" onclick="switchTab(2)">🎯 销售线索转化</div>
+      <div class="s-tab" onclick="switchTab(3)">🛡️ 安全事件响应</div>
+    </div>
+
+    <div class="scenario-content">
+
+      <!-- Scenario 0: Supply Chain -->
+      <div class="sc-panel active" id="tab0">
+        <div style="margin-bottom:28px;">
+          <div style="font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:2px;margin-bottom:8px;">SCENARIO 01</div>
+          <div style="font-family:var(--serif);font-size:22px;font-weight:700;margin-bottom:8px;">供应链异常自动处理</div>
+          <div style="font-size:13px;color:var(--muted);">触发：供应商发来一封"延迟交货"邮件 → 全链路自动处置</div>
+        </div>
+        <div class="sc-flow" id="flow0">
+          <div class="sc-step" style="--dot-c:var(--c-perceive)">
+            <div class="sc-actor"><div class="sc-actor-dot"></div><div class="sc-actor-info"><div class="sc-actor-layer">L2 · PERCEPTION</div><div class="sc-actor-name">Document AI</div></div></div>
+            <div class="sc-action">解析供应商邮件，<strong>提取关键信息</strong>：供应商名称、延误天数（7天）、受影响 SKU（32个）、原因（港口罢工）</div>
+            <div class="sc-badge">EXTRACT</div>
+          </div>
+          <div class="sc-step" style="--dot-c:var(--c-reason)">
+            <div class="sc-actor"><div class="sc-actor-dot"></div><div class="sc-actor-info"><div class="sc-actor-layer">L3 · REASONING</div><div class="sc-actor-name">Agent + CoT</div></div></div>
+            <div class="sc-action">链式推理评估影响：<strong>查询库存 → 预测缺货日期 → 计算损失金额 → 生成 3 套应对方案</strong>（备用供应商、空运、客户沟通）</div>
+            <div class="sc-badge">ANALYZE</div>
+          </div>
+          <div class="sc-step" style="--dot-c:var(--c-connect)">
+            <div class="sc-actor"><div class="sc-actor-dot"></div><div class="sc-actor-info"><div class="sc-actor-layer">L6 · CONNECT</div><div class="sc-actor-name">MCP + API</div></div></div>
+            <div class="sc-action">通过 MCP 同时查询：<strong>ERP 库存系统</strong>（剩余量）、<strong>备供商数据库</strong>（报价和产能）、<strong>物流 API</strong>（空运时效和价格）</div>
+            <div class="sc-badge">QUERY</div>
+          </div>
+          <div class="sc-step" style="--dot-c:var(--c-orch)">
+            <div class="sc-actor"><div class="sc-actor-dot"></div><div class="sc-actor-info"><div class="sc-actor-layer">L5 · ORCHESTRATE</div><div class="sc-actor-name">Workflow + Multi-Agent</div></div></div>
+            <div class="sc-action">Orchestrator 并行分配：<strong>采购 Agent</strong> 联系备用供应商询价，<strong>客服 Agent</strong> 起草客户通知，<strong>财务 Agent</strong> 生成损失预估报告</div>
+            <div class="sc-badge">COORDINATE</div>
+          </div>
+          <div class="sc-step" style="--dot-c:var(--c-exec)">
+            <div class="sc-actor"><div class="sc-actor-dot"></div><div class="sc-actor-info"><div class="sc-actor-layer">L7 · EXECUTE</div><div class="sc-actor-name">RPA + Browser Auto</div></div></div>
+            <div class="sc-action">Robot 自动操作采购系统：<strong>创建紧急采购单</strong>、登录备供商 Portal 提交订单、在 ERP 更新预计到货日期，全程无需人工介入</div>
+            <div class="sc-badge">AUTOMATE</div>
+          </div>
+          <div class="sc-step" style="--dot-c:var(--c-gov)">
+            <div class="sc-actor"><div class="sc-actor-dot"></div><div class="sc-actor-info"><div class="sc-actor-layer">L8 · GOVERN</div><div class="sc-actor-name">Audit + Guardrails</div></div></div>
+            <div class="sc-action">全程记录审计日志，Guardrails 检查：<strong>采购金额是否超权限阈值</strong>（超过则暂停等待人工审批），合规报告自动归档</div>
+            <div class="sc-badge">GOVERN</div>
+          </div>
+          <div class="sc-step" style="--dot-c:var(--c-deliver)">
+            <div class="sc-actor"><div class="sc-actor-dot"></div><div class="sc-actor-info"><div class="sc-actor-layer">L9 · DELIVER</div><div class="sc-actor-name">Dashboard + Copilot</div></div></div>
+            <div class="sc-action">管理驾驶舱实时显示处置进度，Copilot 向采购总监推送<strong>一页决策简报</strong>，人工只需确认最终方案，<strong>整体响应时间从 4 小时压缩至 12 分钟</strong></div>
+            <div class="sc-badge">✓ DONE</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scenario 1: Contract Review -->
+      <div class="sc-panel" id="tab1">
+        <div style="margin-bottom:28px;">
+          <div style="font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:2px;margin-bottom:8px;">SCENARIO 02</div>
+          <div style="font-family:var(--serif);font-size:22px;font-weight:700;margin-bottom:8px;">合同智能审查系统</div>
+          <div style="font-size:13px;color:var(--muted);">触发：律所上传一份 200 页采购合同 → AI 完成合规审查</div>
+        </div>
+        <div class="sc-flow" id="flow1">
+          <div class="sc-step" style="--dot-c:var(--c-perceive)">
+            <div class="sc-actor"><div class="sc-actor-dot"></div><div class="sc-actor-info"><div class="sc-actor-layer">L2 · PERCEPTION</div><div class="sc-actor-name">Document AI + OCR</div></div></div>
+            <div class="sc-action"><strong>解析 200 页 PDF</strong>，识别合同结构（条款编号、标题、正文），提取关键字段：甲乙方、金额、期限、违约条款、知识产权归属</div>
+            <div class="sc-badge">PARSE</div>
+          </div>
+          <div class="sc-step" style="--dot-c:var(--c-infra)">
+            <div class="sc-actor"><div class="sc-actor-dot"></div><div class="sc-actor-info"><div class="sc-actor-layer">L1 + L2 · INFRA</div><div class="sc-actor-name">RAG + Vector DB</div></div></div>
+            <div class="sc-action">将合同内容向量化，与<strong>企业法律知识库</strong>（历史合同、法规库、判例库）进行语义匹配，定位相似条款和潜在风险</div>
+            <div class="sc-badge">RETRIEVE</div>
+          </div>
+          <div class="sc-step" style="--dot-c:var(--c-reason)">
+            <div class="sc-actor"><div class="sc-actor-dot"></div><div class="sc-actor-info"><div class="sc-actor-layer">L3 · REASONING</div><div class="sc-actor-name">Agent + Tree of Thoughts</div></div></div>
+            <div class="sc-action">逐条分析合同风险：<strong>发现 12 处高风险条款</strong>（责任上限过低、仲裁条款不利、自动续约陷阱），每条附上法律依据和修改建议</div>
+            <div class="sc-badge">ANALYZE</div>
+          </div>
+          <div class="sc-step" style="--dot-c:var(--c-skill)">
+            <div class="sc-actor"><div class="sc-actor-dot"></div><div class="sc-actor-info"><div class="sc-actor-layer">L4 · SKILLS</div><div class="sc-actor-name">Skills + Structured Output</div></div></div>
+            <div class="sc-action">加载<strong>法律文书生成技能</strong>，按结构化格式输出审查报告：风险等级（高/中/低）、原始条款、问题说明、修改建议、参考法条</div>
+            <div class="sc-badge">GENERATE</div>
+          </div>
+          <div class="sc-step" style="--dot-c:var(--c-deliver)">
+            <div class="sc-actor"><div class="sc-actor-dot"></div><div class="sc-actor-info"><div class="sc-actor-layer">L9 · DELIVER</div><div class="sc-actor-name">AI Copilot + Knowledge Base</div></div></div>
+            <div class="sc-action">律师通过 Copilot 界面与 AI 对话深入讨论风险点，<strong>一键导出 Word 审查报告</strong>，本次合同自动归档至知识库，丰富未来的检索样本</div>
+            <div class="sc-badge">✓ DELIVER</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scenario 2: Sales Lead -->
+      <div class="sc-panel" id="tab2">
+        <div style="margin-bottom:28px;">
+          <div style="font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:2px;margin-bottom:8px;">SCENARIO 03</div>
+          <div style="font-family:var(--serif);font-size:22px;font-weight:700;margin-bottom:8px;">销售线索智能转化</div>
+          <div style="font-size:13px;color:var(--muted);">触发：官网新增一条询盘表单 → AI 全程跟进直到成单</div>
+        </div>
+        <div class="sc-flow" id="flow2">
+          <div class="sc-step" style="--dot-c:var(--c-connect)">
+            <div class="sc-actor"><div class="sc-actor-dot"></div><div class="sc-actor-info"><div class="sc-actor-layer">L6 · CONNECT</div><div class="sc-actor-name">Webhook + ETL</div></div></div>
+            <div class="sc-action">官网表单触发 Webhook，实时推送到 AI 系统。ETL 自动从多个数据源<strong>丰富线索信息</strong>：爬取公司官网、LinkedIn、查工商数据</div>
+            <div class="sc-badge">TRIGGER</div>
+          </div>
+          <div class="sc-step" style="--dot-c:var(--c-reason)">
+            <div class="sc-actor"><div class="sc-actor-dot"></div><div class="sc-actor-info"><div class="sc-actor-layer">L3 · REASONING</div><div class="sc-actor-name">Agent + Memory</div></div></div>
+            <div class="sc-action">Agent 综合判断线索质量：<strong>公司规模 500 人、融资 B 轮、痛点与产品高度匹配，评分 92 分</strong>，记入长期记忆供后续对话调用</div>
+            <div class="sc-badge">SCORE</div>
+          </div>
+          <div class="sc-step" style="--dot-c:var(--c-skill)">
+            <div class="sc-actor"><div class="sc-actor-dot"></div><div class="sc-actor-info"><div class="sc-actor-layer">L4 · SKILLS</div><div class="sc-actor-name">Skills + Prompt Eng</div></div></div>
+            <div class="sc-action">加载<strong>销售邮件技能</strong>，基于客户行业背景生成个性化开发信，引用客户最近一次融资新闻，说明产品如何解决其扩张期痛点</div>
+            <div class="sc-badge">PERSONALIZE</div>
+          </div>
+          <div class="sc-step" style="--dot-c:var(--c-exec)">
+            <div class="sc-actor"><div class="sc-actor-dot"></div><div class="sc-actor-info"><div class="sc-actor-layer">L7 · EXECUTE</div><div class="sc-actor-name">Browser Auto + RPA</div></div></div>
+            <div class="sc-action">Robot 自动操作 CRM：<strong>创建线索卡片、录入画像数据、发送开发邮件、设置 3 天后跟进提醒</strong>，销售收到的是一份已完成前期调研的热线索</div>
+            <div class="sc-badge">EXECUTE</div>
+          </div>
+          <div class="sc-step" style="--dot-c:var(--c-gov)">
+            <div class="sc-actor"><div class="sc-actor-dot"></div><div class="sc-actor-info"><div class="sc-actor-layer">L8 · GOVERN</div><div class="sc-actor-name">Observability + Evals</div></div></div>
+            <div class="sc-action">监控开信率（68%）、回复率（31%）、转化率，通过 A/B 测试<strong>持续优化邮件策略</strong>，Evals 自动评估每封邮件质量并反馈模型微调</div>
+            <div class="sc-badge">OPTIMIZE</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scenario 3: Security -->
+      <div class="sc-panel" id="tab3">
+        <div style="margin-bottom:28px;">
+          <div style="font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:2px;margin-bottom:8px;">SCENARIO 04</div>
+          <div style="font-family:var(--serif);font-size:22px;font-weight:700;margin-bottom:8px;">安全事件自动响应</div>
+          <div style="font-size:13px;color:var(--muted);">触发：SIEM 检测到异常登录行为 → AI 自动完成威胁评估与处置</div>
+        </div>
+        <div class="sc-flow" id="flow3">
+          <div class="sc-step" style="--dot-c:var(--c-connect)">
+            <div class="sc-actor"><div class="sc-actor-dot"></div><div class="sc-actor-info"><div class="sc-actor-layer">L6 · CONNECT</div><div class="sc-actor-name">Event Bus + API</div></div></div>
+            <div class="sc-action">SIEM 通过事件总线推送告警：<strong>用户 admin@corp 凌晨 3 点从俄罗斯 IP 登录，触发 MFA 失败 5 次</strong>，AI 系统实时接收并启动响应流程</div>
+            <div class="sc-badge">ALERT</div>
+          </div>
+          <div class="sc-step" style="--dot-c:var(--c-reason)">
+            <div class="sc-actor"><div class="sc-actor-dot"></div><div class="sc-actor-info"><div class="sc-actor-layer">L3 · REASONING</div><div class="sc-actor-name">Agent + ReAct</div></div></div>
+            <div class="sc-action">ReAct 循环：查威胁情报库（该 IP 已被标记为恶意）→ 查用户历史（无海外登录记录）→ 查近期操作（刚导出大量数据）→ <strong>威胁等级判定为 CRITICAL</strong></div>
+            <div class="sc-badge">ASSESS</div>
+          </div>
+          <div class="sc-step" style="--dot-c:var(--c-orch)">
+            <div class="sc-actor"><div class="sc-actor-dot"></div><div class="sc-actor-info"><div class="sc-actor-layer">L5 · ORCHESTRATE</div><div class="sc-actor-name">Workflow + Multi-Agent</div></div></div>
+            <div class="sc-action">Orchestrator 并行触发：<strong>封禁 Agent</strong>（立即锁账号）、<strong>取证 Agent</strong>（收集操作日志）、<strong>通知 Agent</strong>（叫醒安全团队）同步执行</div>
+            <div class="sc-badge">RESPOND</div>
+          </div>
+          <div class="sc-step" style="--dot-c:var(--c-exec)">
+            <div class="sc-actor"><div class="sc-actor-dot"></div><div class="sc-actor-info"><div class="sc-actor-layer">L7 · EXECUTE</div><div class="sc-actor-name">Shell Exec + API</div></div></div>
+            <div class="sc-action">自动执行：<strong>禁用 AD 账号、吊销所有 Session Token、封禁源 IP、隔离可能受感染的工作站</strong>，整个封禁过程在 23 秒内完成</div>
+            <div class="sc-badge">CONTAIN</div>
+          </div>
+          <div class="sc-step" style="--dot-c:var(--c-gov)">
+            <div class="sc-actor"><div class="sc-actor-dot"></div><div class="sc-actor-info"><div class="sc-actor-layer">L8 · GOVERN</div><div class="sc-actor-name">Audit + Guardrails</div></div></div>
+            <div class="sc-action">所有操作写入不可篡改审计日志，Guardrails 确认<strong>封禁操作在授权范围内</strong>，自动生成合规事件报告，满足 ISO 27001 记录要求</div>
+            <div class="sc-badge">AUDIT</div>
+          </div>
+          <div class="sc-step" style="--dot-c:var(--c-deliver)">
+            <div class="sc-actor"><div class="sc-actor-dot"></div><div class="sc-actor-info"><div class="sc-actor-layer">L9 · DELIVER</div><div class="sc-actor-name">Dashboard + Report</div></div></div>
+            <div class="sc-action">安全驾驶舱实时展示事件处置时间线，AI 自动生成<strong>事件调查报告</strong>，安全总监收到完整的攻击链分析和改进建议。<strong>MTTD 从 4 小时降至 8 秒</strong></div>
+            <div class="sc-badge">✓ RESOLVED</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- GLOSSARY -->
+<div class="glossary-section" id="glossary">
+  <div class="sec-label fade-up">QUICK REFERENCE</div>
+  <h2 class="sec-title fade-up">术语速查表</h2>
+  <p class="sec-sub fade-up">50+ 核心术语一览，快速建立概念认知</p>
+
+  <div class="glossary-grid fade-up">
+    <div class="glos-card"><div class="glos-term" style="color:var(--c-infra)">LLM</div><div class="glos-zh">大语言模型</div><div class="glos-def">通过海量文本训练的基础 AI 模型，具备语言理解与生成能力</div></div>
+    <div class="glos-card"><div class="glos-term" style="color:var(--c-infra)">EMBEDDING</div><div class="glos-zh">向量嵌入</div><div class="glos-def">将文本转为数字向量，使计算机能计算语义相似度</div></div>
+    <div class="glos-card"><div class="glos-term" style="color:var(--c-infra)">VECTOR DB</div><div class="glos-zh">向量数据库</div><div class="glos-def">专为存储和检索高维向量而优化的数据库</div></div>
+    <div class="glos-card"><div class="glos-term" style="color:var(--c-infra)">FINE-TUNING</div><div class="glos-zh">微调</div><div class="glos-def">用私有数据继续训练通用模型，使其专精于特定领域</div></div>
+    <div class="glos-card"><div class="glos-term" style="color:var(--c-infra)">TOKEN</div><div class="glos-zh">词元</div><div class="glos-def">LLM 处理文本的基本单位，约等于 0.75 个英文单词</div></div>
+    <div class="glos-card"><div class="glos-term" style="color:var(--c-perceive)">RAG</div><div class="glos-zh">检索增强生成</div><div class="glos-def">回答前先检索相关文档注入上下文，解决知识过时和幻觉问题</div></div>
+    <div class="glos-card"><div class="glos-term" style="color:var(--c-perceive)">MULTIMODAL</div><div class="glos-zh">多模态</div><div class="glos-def">同时处理文本、图片、音频等多类型输入的能力</div></div>
+    <div class="glos-card"><div class="glos-term" style="color:var(--c-perceive)">OCR</div><div class="glos-zh">光学字符识别</div><div class="glos-def">从图片或扫描件中提取文字的技术</div></div>
+    <div class="glos-card"><div class="glos-term" style="color:var(--c-perceive)">CHUNKING</div><div class="glos-zh">文档分块</div><div class="glos-def">将长文档切割成适合检索的小片段的策略</div></div>
+    <div class="glos-card"><div class="glos-term" style="color:var(--c-reason)">AGENT</div><div class="glos-zh">智能体</div><div class="glos-def">能自主感知、规划、执行多步骤任务的 AI 系统</div></div>
+    <div class="glos-card"><div class="glos-term" style="color:var(--c-reason)">CoT</div><div class="glos-zh">链式推理</div><div class="glos-def">让模型逐步写出推理过程再给答案，提升准确率</div></div>
+    <div class="glos-card"><div class="glos-term" style="color:var(--c-reason)">ReAct</div><div class="glos-zh">推理+行动</div><div class="glos-def">交替进行思考和工具调用的 Agent 范式</div></div>
+    <div class="glos-card"><div class="glos-term" style="color:var(--c-reason)">HALLUCINATION</div><div class="glos-zh">幻觉</div><div class="glos-def">AI 自信地生成不存在或错误信息的现象，RAG 可缓解</div></div>
+    <div class="glos-card"><div class="glos-term" style="color:var(--c-reason)">PLANNING</div><div class="glos-zh">任务规划</div><div class="glos-def">将复杂目标分解为有序子任务序列的能力</div></div>
+    <div class="glos-card"><div class="glos-term" style="color:var(--c-skill)">SKILLS</div><div class="glos-zh">技能模块</div><div class="glos-def">封装特定任务最佳实践的可复用能力包</div></div>
+    <div class="glos-card"><div class="glos-term" style="color:var(--c-skill)">FUNCTION CALLING</div><div class="glos-zh">函数调用</div><div class="glos-def">AI 自动选择并调用预定义函数，实现与外部系统交互</div></div>
+    <div class="glos-card"><div class="glos-term" style="color:var(--c-skill)">PROMPT ENGINEERING</div><div class="glos-zh">提示词工程</div><div class="glos-def">系统设计提示词以最大化模型输出质量的方法论</div></div>
+    <div class="glos-card"><div class="glos-term" style="color:var(--c-skill)">FEW-SHOT</div><div class="glos-zh">少样本学习</div><div class="glos-def">在提示词中提供少量示例，引导模型按期望格式输出</div></div>
+    <div class="glos-card"><div class="glos-term" style="color:var(--c-orch)">WORKFLOW</div><div class="glos-zh">工作流</div><div class="glos-def">定义步骤顺序、分支逻辑和错误处理的任务蓝图</div></div>
+    <div class="glos-card"><div class="glos-term" style="color:var(--c-orch)">MULTI-AGENT</div><div class="glos-zh">多智能体</div><div class="glos-def">多个专业化 Agent 分工协作完成复杂任务</div></div>
+    <div class="glos-card"><div class="glos-term" style="color:var(--c-orch)">ORCHESTRATOR</div><div class="glos-zh">任务协调器</div><div class="glos-def">多 Agent 系统的调度中枢，负责分配任务和整合结果</div></div>
+    <div class="glos-card"><div class="glos-term" style="color:var(--c-orch)">DAG</div><div class="glos-zh">有向无环图</div><div class="glos-def">描述任务依赖关系的图结构，是 Workflow 的底层模型</div></div>
+    <div class="glos-card"><div class="glos-term" style="color:var(--c-connect)">MCP</div><div class="glos-zh">模型上下文协议</div><div class="glos-def">Anthropic 推出的 AI-工具标准化连接协议</div></div>
+    <div class="glos-card"><div class="glos-term" style="color:var(--c-connect)">WEBHOOK</div><div class="glos-zh">事件钩子</div><div class="glos-def">事件发生时主动推送通知，实现实时事件驱动</div></div>
+    <div class="glos-card"><div class="glos-term" style="color:var(--c-connect)">ETL</div><div class="glos-zh">数据集成</div><div class="glos-def">提取-转换-加载，整合多源数据为 AI 提供燃料</div></div>
+    <div class="glos-card"><div class="glos-term" style="color:var(--c-exec)">RPA</div><div class="glos-zh">流程自动化机器人</div><div class="glos-def">模拟人类操作界面，无需 API 即可自动化任意软件</div></div>
+    <div class="glos-card"><div class="glos-term" style="color:var(--c-exec)">COMPUTER USE</div><div class="glos-zh">电脑操控</div><div class="glos-def">AI 通过视觉理解屏幕并自主决定操作的新能力</div></div>
+    <div class="glos-card"><div class="glos-term" style="color:var(--c-exec)">SANDBOX</div><div class="glos-zh">沙箱</div><div class="glos-def">隔离的安全执行环境，防止 AI 操作影响生产系统</div></div>
+    <div class="glos-card"><div class="glos-term" style="color:var(--c-gov)">GUARDRAILS</div><div class="glos-zh">安全护栏</div><div class="glos-def">约束 AI 行为边界，防止有害输出和越权操作</div></div>
+    <div class="glos-card"><div class="glos-term" style="color:var(--c-gov)">OBSERVABILITY</div><div class="glos-zh">可观测性</div><div class="glos-def">对 AI 系统延迟、成本、质量的全面监控能力</div></div>
+    <div class="glos-card"><div class="glos-term" style="color:var(--c-gov)">EVALS</div><div class="glos-zh">评估体系</div><div class="glos-def">系统性衡量 AI 输出质量、持续迭代优化的方法论</div></div>
+    <div class="glos-card"><div class="glos-term" style="color:var(--c-gov)">PROMPT INJECTION</div><div class="glos-zh">提示词注入</div><div class="glos-def">恶意用户通过输入操控 AI 行为的安全攻击手段</div></div>
+    <div class="glos-card"><div class="glos-term" style="color:var(--c-deliver)">AI COPILOT</div><div class="glos-zh">智能副驾</div><div class="glos-def">嵌入工作界面、实时辅助用户的 AI 助理形态</div></div>
+    <div class="glos-card"><div class="glos-term" style="color:var(--c-deliver)">AI GATEWAY</div><div class="glos-zh">AI 网关</div><div class="glos-def">统一管理企业所有 AI 调用的路由、认证、限流中间层</div></div>
+    <div class="glos-card"><div class="glos-term" style="color:var(--c-deliver)">KNOWLEDGE BASE</div><div class="glos-zh">企业知识库</div><div class="glos-def">RAG 驱动的企业文档库，让 AI 成为懂公司的智能助手</div></div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft-left">
+    <div class="ft-title">企业 AI 全栈体系</div>
+    <div class="ft-desc">9 层架构 · 50+ 核心概念 · 覆盖从基础模型到业务交付的完整技术栈<br>构建真正可落地的企业智能操作系统</div>
+  </div>
+  <div class="ft-layers">
+    <div style="font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:2px;margin-bottom:12px;">LAYER INDEX</div>
+    <div class="ft-layer-row"><div class="ft-dot" style="background:var(--c-infra)"></div><div class="ft-name">L1 · 基础层 INFRASTRUCTURE</div></div>
+    <div class="ft-layer-row"><div class="ft-dot" style="background:var(--c-perceive)"></div><div class="ft-name">L2 · 感知层 PERCEPTION</div></div>
+    <div class="ft-layer-row"><div class="ft-dot" style="background:var(--c-reason)"></div><div class="ft-name">L3 · 推理层 REASONING</div></div>
+    <div class="ft-layer-row"><div class="ft-dot" style="background:var(--c-skill)"></div><div class="ft-name">L4 · 能力层 CAPABILITIES</div></div>
+    <div class="ft-layer-row"><div class="ft-dot" style="background:var(--c-orch)"></div><div class="ft-name">L5 · 编排层 ORCHESTRATION</div></div>
+    <div class="ft-layer-row"><div class="ft-dot" style="background:var(--c-connect)"></div><div class="ft-name">L6 · 连接层 CONNECTIVITY</div></div>
+    <div class="ft-layer-row"><div class="ft-dot" style="background:var(--c-exec)"></div><div class="ft-name">L7 · 执行层 EXECUTION</div></div>
+    <div class="ft-layer-row"><div class="ft-dot" style="background:var(--c-gov)"></div><div class="ft-name">L8 · 治理层 GOVERNANCE</div></div>
+    <div class="ft-layer-row"><div class="ft-dot" style="background:var(--c-deliver)"></div><div class="ft-name">L9 · 交付层 DELIVERY</div></div>
+  </div>
+</footer>
+
+<script>
+// ── Scroll-based animations ──
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('vis');
+    }
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.fade-up, .layer-row, .fs-layer').forEach((el, i) => {
+  if (el.classList.contains('fs-layer') || el.classList.contains('layer-row')) {
+    el.style.transitionDelay = (i % 9) * 0.06 + 's';
+  }
+  io.observe(el);
+});
+
+// ── Scenario tabs ──
+function switchTab(idx) {
+  document.querySelectorAll('.s-tab').forEach((t,i) => t.classList.toggle('active', i===idx));
+  document.querySelectorAll('.sc-panel').forEach((p,i) => p.classList.toggle('active', i===idx));
+  // animate steps
+  setTimeout(() => {
+    const steps = document.querySelector('#tab'+idx+' .sc-flow').querySelectorAll('.sc-step');
+    steps.forEach((s,i) => {
+      s.classList.remove('vis');
+      setTimeout(() => s.classList.add('vis'), i * 150);
+    });
+  }, 50);
+}
+
+// Animate first tab on load
+window.addEventListener('load', () => {
+  setTimeout(() => switchTab(0), 600);
+});
+
+// ── Scroll to ──
+function scrollTo(selector) {
+  const el = document.querySelector(selector);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ── Nav scroll effect ──
+window.addEventListener('scroll', () => {
+  const nav = document.querySelector('nav');
+  nav.style.borderBottomColor = window.scrollY > 50 ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.07)';
+});
+</script>
+</body>
+</html>
